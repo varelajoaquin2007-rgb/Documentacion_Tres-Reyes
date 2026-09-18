@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documentación del Proyecto: TruckRoute · Tres Reyes — Aceitunas y Encurtidos</title>
+<meta name="description" content="Carpeta del Proyecto de TruckRoute: sistema de ruteo logístico para Tres Reyes — Aceitunas y Encurtidos. Diagnóstico, requisitos, arquitectura, modelo de datos, gestión, oferta económica y seguimiento.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0f0c;
+    --surface:#111814;
+    --surface-2:#161f19;
+    --border:#233028;
+    --text:#e7f2ec;
+    --text-dim:#96ab9f;
+    --green:#3ddc84;
+    --green-dim:#279a5c;
+    --amber:#f2b84b;
+    --blue:#5ab4e8;
+    --radius:10px;
+    --maxw:960px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.6;font-size:16px;}
+  h1,h2,h3,h4{font-family:'DM Sans',sans-serif;color:#fff;line-height:1.25;}
+  a{color:var(--green);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  code, pre, .mono{font-family:'JetBrains Mono',monospace;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+
+  header.hero{border-bottom:1px solid var(--border);padding:64px 0 40px;background:radial-gradient(circle at 15% 0%, rgba(61,220,132,.10), transparent 55%);}
+  .eyebrow{color:var(--green);font-weight:600;font-size:.9rem;margin:0 0 8px;}
+  header.hero h1{font-size:clamp(2rem,5vw,3rem);margin:0 0 6px;font-weight:800;}
+  header.hero .sub{color:var(--text-dim);font-size:1.05rem;margin:0 0 28px;max-width:640px;}
+  nav.toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:8px;}
+  nav.toc .col{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;}
+  nav.toc .col p.label{margin:0 0 10px;color:var(--text-dim);font-size:.75rem;letter-spacing:.03em;}
+  nav.toc a{display:block;color:var(--text);font-size:.9rem;padding:3px 0;}
+  nav.toc a:hover{color:var(--green);text-decoration:none;}
+
+  main{padding:8px 0 100px;}
+  section{padding:52px 0;border-bottom:1px solid var(--border);}
+  section:last-of-type{border-bottom:none;}
+  section h2{font-size:1.6rem;margin:0 0 6px;}
+  section h2 .num{color:var(--green);font-family:'JetBrains Mono',monospace;font-size:1rem;margin-right:10px;}
+  section h3{font-size:1.15rem;margin:34px 0 10px;color:var(--green);}
+  section h4{font-size:1rem;margin:22px 0 8px;color:var(--text);}
+  p{color:#cfe0d7;}
+  .lede{color:var(--text-dim);font-size:.98rem;margin-top:-4px;}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0 6px;font-size:.9rem;}
+  th,td{border:1px solid var(--border);padding:9px 12px;text-align:left;vertical-align:top;}
+  th{background:var(--surface-2);color:var(--green);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.02em;}
+  tr:nth-child(even) td{background:rgba(255,255,255,.015);}
+  td strong{color:#fff;}
+
+  .callout{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:14px 18px;margin:16px 0;font-size:.92rem;color:var(--text-dim);}
+  .callout.info{border-left-color:var(--blue);background:rgba(90,180,232,.06);}
+  .callout.info b{color:var(--blue);}
+  .callout.todo{border-left-color:var(--amber);background:rgba(242,184,75,.05);}
+  .callout.todo b{color:var(--amber);}
+  .callout b{color:var(--green);}
+
+  ul,ol{color:#cfe0d7;padding-left:22px;}
+  li{margin:5px 0;}
+  code.inline{background:var(--surface-2);border:1px solid var(--border);border-radius:4px;padding:1px 6px;color:var(--green);font-size:.87em;}
+  pre{background:#0d1310;border:1px solid var(--border);border-radius:8px;padding:16px 18px;overflow-x:auto;font-size:.82rem;color:#bfe8cf;line-height:1.55;}
+
+  .badge{display:inline-block;font-size:.72rem;font-family:'JetBrains Mono',monospace;padding:2px 8px;border-radius:20px;border:1px solid var(--border);color:var(--text-dim);}
+  .badge.alta{color:var(--amber);border-color:var(--amber);}
+  .badge.media{color:var(--blue);border-color:var(--blue);}
+  .badge.baja{color:var(--text-dim);}
+  .badge.hw{color:#c9a4f2;border-color:#c9a4f2;}
+
+  .flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin:16px 0;font-size:.9rem;}
+  .flow .box{border:1px solid var(--border);border-radius:6px;padding:6px 14px;font-weight:600;color:#fff;background:var(--surface-2);}
+  .flow .arrow{color:var(--text-dim);font-size:.82rem;}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media (max-width:700px){.grid2{grid-template-columns:1fr;}}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;}
+  .card h4{margin-top:0;color:#fff;}
+
+  .er-wrap{display:flex;flex-wrap:wrap;gap:14px;margin:18px 0;}
+  .er-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;min-width:170px;flex:1 1 170px;overflow:hidden;}
+  .er-box .head{padding:8px 12px;font-weight:700;font-size:.85rem;color:#0a0f0c;}
+  .er-box.core .head{background:var(--green);}
+  .er-box.vol .head{background:var(--blue);}
+  .er-box.aux .head{background:var(--amber);}
+  .er-box ul{list-style:none;margin:0;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--text-dim);}
+  .er-box li.pk{color:#fff;}
+  .er-box li.fk{color:var(--green);}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:.82rem;color:var(--text-dim);margin-top:6px;}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .dot{width:10px;height:10px;border-radius:2px;display:inline-block;}
+
+  .team{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0;}
+  .team .p{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;}
+  .team .p .role{color:var(--green);font-size:.8rem;font-weight:600;margin-bottom:4px;}
+  .team .p .name{font-weight:700;color:#fff;}
+  .team .p p{margin:8px 0 0;font-size:.86rem;color:var(--text-dim);}
+
+  footer{border-top:1px solid var(--border);padding:36px 0 60px;color:var(--text-dim);font-size:.85rem;}
+  footer strong{color:var(--text);}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Carpeta del Proyecto · Documentación</p>
+    <h1>TruckRoute — Sistema de ruteo logístico para Tres Reyes</h1>
+    <p class="sub">Documentación técnica, operativa y económica del proyecto. Sistema de software (backend + dashboard web) para calcular rutas óptimas, controlar la carga por camión y hacer seguimiento de los repartos de Tres Reyes — Aceitunas y Encurtidos, San Miguel, Buenos Aires.</p>
+    <p class="lede"><strong style="color:#fff">Cliente:</strong> Roberto García · Tres Reyes — Aceitunas y Encurtidos, San Miguel &nbsp;·&nbsp; <strong style="color:#fff">Materia:</strong> Evaluación de Proyectos &nbsp;·&nbsp; <strong style="color:#fff">Docente:</strong> Prof. Pedaci, Lourdes &nbsp;·&nbsp; <strong style="color:#fff">Ciclo:</strong> 7mo Informática 2026 · Instituto Leonardo Murialdo</p>
+
+    <nav class="toc">
+      <div class="col">
+        <p class="label">PRIMERA SECCIÓN</p>
+        <a href="#s1">1 · Control de Cambios</a>
+        <a href="#s2">2 · Diagnóstico: Árbol de Problemas y Soluciones</a>
+        <a href="#s3">3 · Introducción</a>
+        <a href="#s3-1">3.1 Propósito</a>
+        <a href="#s3-2">3.2 Alcance</a>
+        <a href="#s3-3">3.3 Personal Involucrado</a>
+        <a href="#s3-4">3.4 Definiciones y acrónimos</a>
+        <a href="#s3-5">3.5 Referencias</a>
+        <a href="#s3-6">3.6 Resumen Ejecutivo</a>
+      </div>
+      <div class="col">
+        <p class="label">SEGUNDA SECCIÓN</p>
+        <a href="#s4">4 · Descripción General</a>
+        <a href="#s4-1">4.1 Perspectiva</a>
+        <a href="#s4-2">4.2 Funcionalidad</a>
+        <a href="#s4-3">4.3 Usuarios</a>
+        <a href="#s4-4">4.4 Restricciones</a>
+        <a href="#s4-5">4.5 Suposiciones</a>
+        <a href="#s4-6">4.6 Evolución previsible</a>
+      </div>
+      <div class="col">
+        <p class="label">TERCERA SECCIÓN</p>
+        <a href="#s5">5 · Requisitos Específicos</a>
+        <a href="#s5-1">5.1 Funcionales</a>
+        <a href="#s5-2">5.2 Interfaz de usuario</a>
+        <a href="#s5-3">5.3 Interfaz de hardware</a>
+        <a href="#s5-4">5.4 Interfaz de software</a>
+        <a href="#s5-5">5.5 Comunicación</a>
+        <a href="#s5-6">5.6 Modelo Entidad-Relación</a>
+        <a href="#s6">6 · Oferta de Gestión</a>
+        <a href="#s7">7 · Oferta Económica</a>
+        <a href="#s8">8 · Estimación Económica</a>
+        <a href="#s9">9 · Contrato</a>
+      </div>
+      <div class="col">
+        <p class="label">SEGUIMIENTO</p>
+        <a href="#s10">10 · Bitácora del Proyecto</a>
+        <a href="#s10-1">10.1 Registro de Entrevistas</a>
+        <a href="#s10-2">10.2 Minutas de Reunión</a>
+        <a href="#s10-3">10.3 Registro de Cambios del Mockup</a>
+        <a href="#s10-4">10.4 Bitácora de Avances Técnicos</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section id="s1">
+  <h2><span class="num">1</span>Control de Cambios</h2>
+  <p class="lede">Registro de las modificaciones sobre la documentación y el alcance del proyecto. Cada validación con Roberto que derive en un cambio de requerimiento se anota como fila nueva.</p>
+  <table>
+    <tr><th>Versión</th><th>Fecha</th><th>Responsable</th><th>Detalle del cambio</th></tr>
+    <tr><td>0.1</td><td>Mayo 2026</td><td>Equipo</td><td>Primera presentación (E01): identificación del problema a partir de la entrevista a Roberto García, análisis síntoma → causa → RF.</td></tr>
+    <tr><td>0.2</td><td>A ajustar</td><td>Equipo</td><td>Segunda presentación: MVP TruckRoute funcional en producción — importación de boletas PDF, geocodificación, ruteo por Nearest Neighbor, gestión de viajes, navegación GPS, autenticación con roles.</td></tr>
+    <tr><td>0.3</td><td>A ajustar</td><td>Equipo</td><td>Redefinición de roles: Varela, Joaquín suma el rol de diseño UX/UI al de Project Manager.</td></tr>
+  </table>
+  <div class="callout todo"><b>A completar por el equipo:</b> las fechas exactas de cada versión están pendientes de ajuste en el <a href="https://docs.google.com/spreadsheets/d/1FuAuQJFAjjr4MF3At7QOEdmFyjWleegwSiqmdQG4tVY/edit?usp=drivesdk" target="_blank">cronograma de Google Sheets</a> (ver también sección 6.1).</div>
+</section>
+
+<section id="s2">
+  <h2><span class="num">2</span>Diagnóstico: Árbol de Problemas y Soluciones</h2>
+  <p>Diagnóstico original elaborado por el equipo a partir de la entrevista a Roberto García (Tres Reyes). Es la pieza que fundamenta todas las decisiones de diseño que siguen: el problema central y sus causas explican por qué el sistema hace lo que hace, y los medios del árbol de soluciones son el origen directo de los requerimientos funcionales que se especifican más adelante.</p>
+
+  <div class="callout info"><b>Cómo se lee el árbol</b><br>El árbol de problemas se lee de abajo hacia arriba: las causas producen el problema central, y el problema central produce los efectos. El árbol de soluciones es su espejo (cada causa se convierte en un medio, y cada efecto en un fin medible).</div>
+
+  <div class="flow">
+    <div class="box">Causas</div><span class="arrow">→ producen →</span>
+    <div class="box">Problema central</div><span class="arrow">→ produce →</span>
+    <div class="box">Efectos</div>
+  </div>
+
+  <h4>Problema central</h4>
+  <div class="callout info"><b>Problema central</b><br>Tres Reyes no cuenta con un sistema que calcule y controle sus rutas de reparto de forma automática. La planificación es <strong>100% manual</strong>: se arma con Google Maps y se coordina por WhatsApp, sin optimización ni trazabilidad.</div>
+
+  <h4>Causas</h4>
+  <p class="lede">Condiciones que producen el problema central. Cada una se relevó en la entrevista y se traduce después en un requerimiento concreto.</p>
+  <table>
+    <tr><th>Causa</th><th>Qué se observó en el relevamiento</th></tr>
+    <tr><td><strong>No hay ruteo automático</strong></td><td>Las rutas se arman a mano con Google Maps, sin ningún algoritmo que las optimice.</td></tr>
+    <tr><td><strong>Coordinación por WhatsApp</strong></td><td>Cada hoja de ruta se comunica al repartidor por mensaje, sin registro digital ni trazabilidad.</td></tr>
+    <tr><td><strong>Sin agrupación por zona</strong></td><td>Las boletas no se agrupan por cercanía antes de armar el recorrido.</td></tr>
+    <tr><td><strong>Sin control de carga por camión</strong> <span class="badge hw">HW</span></td><td>No hay registro de cuántos kilos lleva cada camión en cada salida.</td></tr>
+    <tr><td><strong>Sin visión global de los destinos del día</strong></td><td>Las rutas se arman boleta por boleta, no con el conjunto completo del día.</td></tr>
+    <tr><td><strong>No hay registro histórico ni trazabilidad</strong></td><td>No existe ninguna serie de datos previa, así que no se puede comparar una salida con otra.</td></tr>
+    <tr><td><strong>No hay alertas</strong></td><td>Ningún mecanismo avisa si un camión se desvía o va sobrecargado.</td></tr>
+  </table>
+
+  <h4>Efectos</h4>
+  <p class="lede">Consecuencias que el problema central produce hoy en Tres Reyes. Sus valores actuales son la línea de base contra la que se mide el proyecto.</p>
+  <table>
+    <tr><th>Efecto</th><th>Cómo se manifiesta hoy (línea de base)</th></tr>
+    <tr><td><strong>Dobles pasadas por el mismo punto</strong></td><td>Frecuente: al hacer un envío, recién en el siguiente viaje se dan cuenta de que ya habían pasado por esa zona.</td></tr>
+    <tr><td><strong>Combustible desperdiciado</strong></td><td>Sin medir, pero reconocido como "usamos más combustible del necesario".</td></tr>
+    <tr><td><strong>Horas perdidas armando rutas</strong></td><td>Alto / sin medir: el armado manual consume horas del equipo cada día.</td></tr>
+    <tr><td><strong>Riesgo de sobrecarga no detectada</strong></td><td>Sin registro: no se sabe cuánta carga lleva cada camión por viaje.</td></tr>
+    <tr><td><strong>Dependencia de WhatsApp</strong></td><td>Coordinación manual, precaria, sin registro digital.</td></tr>
+  </table>
+
+  <h3 style="margin-top:38px;">Árbol de soluciones</h3>
+  <div class="callout info"><b>Objetivo central</b><br>Dar a Tres Reyes un sistema que calcule automáticamente la ruta óptima de cada camión, controle su carga y elimine la dependencia de Maps y WhatsApp.</div>
+  <p>Cada <strong>medio</strong> del árbol de soluciones neutraliza una causa identificada más arriba, y se convierte después en uno o varios requerimientos del sistema.</p>
+  <table>
+    <tr><th>Medio</th><th>Causa que neutraliza</th></tr>
+    <tr><td><strong>Algoritmo de ruteo automático</strong><br><span class="lede" style="font-size:.85em">Nearest Neighbor + distancia Haversine.</span></td><td>No hay ruteo automático.</td></tr>
+    <tr><td><strong>Hoja de ruta digital y notificación al repartidor</strong></td><td>Coordinación por WhatsApp.</td></tr>
+    <tr><td><strong>Agrupación automática de destinos por zona</strong></td><td>Sin agrupación por zona.</td></tr>
+    <tr><td><strong>Control de carga (kg) por camión y salida</strong></td><td>Sin control de carga por camión.</td></tr>
+    <tr><td><strong>Vista de mapa con el recorrido planificado del día</strong></td><td>Sin visión global de los destinos del día.</td></tr>
+    <tr><td><strong>Backend con base de datos de viajes y boletas</strong></td><td>No hay registro histórico ni trazabilidad.</td></tr>
+    <tr><td><strong>Alerta de sobrecarga y de desvío de ruta</strong></td><td>No hay alertas.</td></tr>
+  </table>
+
+  <p>Los <strong>fines</strong> son el espejo de los efectos: expresan a qué valor debería llegar cada uno con el sistema funcionando.</p>
+  <table>
+    <tr><th>Fin</th><th>Meta verificable</th><th>Punto de partida</th></tr>
+    <tr><td><strong>Eliminar las rutas ineficientes</strong></td><td>0 rutas con doble pasada en los primeros 30 días.</td><td>Frecuente</td></tr>
+    <tr><td><strong>Reducir el combustible usado</strong></td><td>Reducción de distancia recorrida ≥ 15%.</td><td>Sin medir</td></tr>
+    <tr><td><strong>Automatizar el armado de rutas</strong></td><td>Menos de 2 minutos automáticos.</td><td>Manual, horas</td></tr>
+    <tr><td><strong>Controlar la carga por camión</strong></td><td>100% de las salidas con registro de kg.</td><td>Sin registro</td></tr>
+    <tr><td><strong>Dejar de depender de WhatsApp</strong></td><td>El repartidor completa su jornada usando solo la app.</td><td>Coordinación manual</td></tr>
+  </table>
+
+  <div class="callout"><b>Del árbol al resto del documento</b><br>Este diagnóstico es el que alimenta la línea de base y los OKRs del proyecto (4.6): los efectos aportan los valores de partida y los fines aportan los Key Results contra los que se evalúa el proyecto. Lo que el árbol identifica pero el sistema no resuelve en esta entrega queda declarado en las Limitaciones del alcance (5.1), y las mejoras se difieren a versiones posteriores en la Evolución previsible del sistema (4.6).</div>
+</section>
+
+<section id="s3">
+  <h2><span class="num">3</span>Introducción</h2>
+
+  <h3 id="s3-1">3.1. Propósito</h3>
+  <p>El propósito del proyecto es reemplazar el método manual de planificación de repartos de Tres Reyes — hoy resuelto con Google Maps y coordinación por WhatsApp — por un sistema que calcule automáticamente la ruta óptima de cada camión, controle la carga por salida y le dé a Roberto García visibilidad real de la operación logística diaria.</p>
+  <p>TruckRoute busca resolver tres problemas medibles detectados en la entrevista (ver también el árbol de problemas, sección 2): el <strong>tiempo perdido</strong> armando rutas a mano, el <strong>combustible desperdiciado</strong> por rutas no optimizadas y las dobles pasadas por el mismo punto, y la <strong>falta de control de carga</strong> (kg) por camión y salida.</p>
+
+  <h3 id="s3-2">3.2. Alcance</h3>
+  <p>El sistema <strong>incluye</strong>: importación y parseo automático de boletas en PDF, geocodificación de direcciones, agrupación de entregas por zona, cálculo de ruta óptima (Nearest Neighbor + distancia Haversine), generación de hoja de ruta digital, gestión del ciclo de vida del viaje (armar → confirmar → iniciar → finalizar), navegación GPS giro a giro para el repartidor, control de carga por camión, un panel de alertas y autenticación con roles diferenciados.</p>
+  <p>El sistema <strong>no incluye</strong> facturación ni gestión contable, gestión de stock o inventario, liquidación de sueldos, integración con sistemas de terceros ni soporte multiempresa en esta versión. El detalle completo está en las Limitaciones (dentro de 5.1) y se formaliza en el Contrato (sección 9).</p>
+
+  <h3 id="s3-3">3.3. Personal Involucrado</h3>
+  <p class="lede">Roles del equipo de proyecto. Los títulos de rol son los definidos en la primera presentación; Varela, Joaquín sumó luego el rol de UX/UI. Las responsabilidades específicas de cada rol se redactaron acá en base a los componentes reales del sistema (ver 5.4), reemplazando descripciones de una plantilla anterior que no correspondían a este proyecto — <strong>a confirmar por el equipo</strong>.</p>
+  <div class="team">
+    <div class="p"><div class="role">Project Manager + UX/UI</div><div class="name">Varela, Joaquín</div><p>Gestión, GANTT, control de cambios y OKRs; diseño de interfaz del dashboard y validación de HCI con Roberto y Tomás.</p></div>
+    <div class="p"><div class="role">Dev Backend</div><div class="name">Traverso, Lautaro</div><p>API REST propia en PHP: endpoints de boletas, viajes, configuración y alertas; lógica de estados del viaje.</p></div>
+    <div class="p"><div class="role">Dev Backend</div><div class="name">Crupi, Gino</div><p>API REST, algoritmos de ruteo (Nearest Neighbor + Haversine) e integración con Nominatim y OSRM.</p></div>
+    <div class="p"><div class="role">Especialista en BD</div><div class="name">Silva, Mateo</div><p>Modelo de datos (usuarios, repartidores, camiones, boletas, viajes, posiciones, alertas), consultas SQL y backups.</p></div>
+    <div class="p"><div class="role">Dev Frontend</div><div class="name">García, Facundo</div><p>Dashboard SPA en Vanilla JS, integración de Leaflet y validación de interfaz con el usuario.</p></div>
+    <div class="p"><div class="role">Cliente</div><div class="name">Roberto García</div><p>Dueño de Tres Reyes — Aceitunas y Encurtidos. Valida requerimientos, prioriza y firma el contrato.</p></div>
+  </div>
+
+  <h3 id="s3-4">3.4. Definiciones, acrónimos y abreviaturas</h3>
+  <table>
+    <tr><th>Término</th><th>Definición</th></tr>
+    <tr><td>MVP</td><td>Minimum Viable Product: versión mínima funcional del sistema, ya en producción para Tres Reyes.</td></tr>
+    <tr><td>SPA</td><td>Single Page Application: el dashboard corre como una sola página (<code class="inline">index.html</code>) sin recargar el navegador.</td></tr>
+    <tr><td>API REST</td><td>Interfaz HTTP propia (sin framework) que expone boletas, viajes, configuración y alertas al frontend.</td></tr>
+    <tr><td>Nominatim / OSM</td><td>Servicio gratuito de geocodificación de OpenStreetMap: convierte una dirección de texto en coordenadas.</td></tr>
+    <tr><td>OSRM</td><td>Open Source Routing Machine: motor de cálculo de rutas sobre el mapa real.</td></tr>
+    <tr><td>Nearest Neighbor</td><td>Algoritmo de optimización que ordena las paradas eligiendo siempre el destino más cercano no visitado.</td></tr>
+    <tr><td>Haversine</td><td>Fórmula matemática para calcular la distancia entre dos coordenadas geográficas.</td></tr>
+    <tr><td>bcrypt</td><td>Algoritmo de hash usado para almacenar contraseñas sin guardarlas en texto plano.</td></tr>
+    <tr><td>JWT</td><td>JSON Web Token: mecanismo de sesión seguro pendiente de implementar (ver roadmap crítico, 4.6).</td></tr>
+    <tr><td>RF / RNF</td><td>Requerimiento Funcional / Requerimiento No Funcional.</td></tr>
+    <tr><td>OKR / KR</td><td>Objective and Key Results / Resultado Clave: métrica cuantitativa de progreso.</td></tr>
+    <tr><td>Línea de base</td><td>Medición de la situación inicial (antes del sistema), usada como referencia de comparación.</td></tr>
+  </table>
+
+  <h3 id="s3-5">3.5. Referencias</h3>
+  <p class="lede">Formato APA 7ª edición.</p>
+  <ul>
+    <li>Pedaci, L. (2026). <em>Evaluación de Proyectos - Módulo 01: El Proyecto y sus generalidades</em>. Instituto Leonardo Murialdo.</li>
+    <li>Pedaci, L. (2026). <em>Evaluación de Proyectos - Módulo 02: Fases de un Proyecto</em>. Instituto Leonardo Murialdo.</li>
+    <li>Pedaci, L. (2026). <em>Evaluación de Proyectos - Módulo de Documentación</em>. Instituto Leonardo Murialdo.</li>
+    <li>Universidad Tecnológica Nacional. (2012). <em>Buenas Prácticas para Proyectos Informáticos</em>. edUTecNe. ISBN 978-987-1896-01-1.</li>
+    <li>Equipo N° 5. (2026). <em>TruckRoute — MVP</em> [Aplicación web]. <a href="https://tres-reyes-logistica.page.gd/" target="_blank">tres-reyes-logistica.page.gd</a></li>
+  </ul>
+
+  <h3 id="s3-6">3.6. Resumen Ejecutivo</h3>
+  <p>TruckRoute es un sistema de software pensado para Tres Reyes — Aceitunas y Encurtidos (San Miguel, Buenos Aires): una empresa de distribución con más de 20 años en el rubro, 7 empleados y flota propia. El sistema reemplaza el método actual (Google Maps + WhatsApp) por un flujo digital: se cargan las boletas del día en PDF, el sistema geocodifica los destinos, agrupa por zona y calcula la ruta óptima para cada camión, respetando su capacidad de carga. El repartidor recibe la hoja de ruta y navega con GPS giro a giro; el administrador ve el estado de todos los viajes y recibe alertas de cierre.</p>
+  <p><strong>Resultados esperados:</strong> eliminar las dobles pasadas por el mismo punto, reducir la distancia total recorrida en al menos un 15%, bajar el armado de rutas de un proceso manual a menos de 2 minutos automáticos, y que los repartidores dejen de depender de WhatsApp para coordinar su jornada.</p>
+</section>
+
+<section id="s4">
+  <h2><span class="num">4</span>Descripción General</h2>
+
+  <h3 id="s4-1">4.1. Perspectiva del producto</h3>
+  <p>TruckRoute es un <strong>sistema nuevo</strong>: hoy Tres Reyes no tiene ningún sistema digital de ruteo, todo se resuelve con Google Maps y WhatsApp. No reemplaza un software existente ni es parte de un sistema mayor, aunque sí se apoya en infraestructura ya disponible: las PCs y celulares del equipo de Tres Reyes (Roberto usa iPhone, Tomás un dispositivo Android simple) y servicios externos gratuitos (Nominatim, OSRM).</p>
+  <div class="flow">
+    <div class="box">Boletas PDF</div><span class="arrow">→</span>
+    <div class="box">Geocodificación (Nominatim)</div><span class="arrow">→</span>
+    <div class="box">Backend PHP + MySQL</div><span class="arrow">→</span>
+    <div class="box">Dashboard Vanilla JS (Leaflet + GPS)</div>
+  </div>
+
+  <h3 id="s4-2">4.2. Funcionalidad del producto</h3>
+  <ul>
+    <li>Importar boletas en PDF y extraer automáticamente nombre, dirección y peso de cada una.</li>
+    <li>Convertir cada dirección en coordenadas y agruparlas por zona geográfica.</li>
+    <li>Calcular el orden óptimo de paradas para minimizar la distancia recorrida.</li>
+    <li>Generar la hoja de ruta digital de cada camión, sin armarla a mano.</li>
+    <li>Mostrar el recorrido en un mapa, con navegación GPS en tiempo real para el repartidor.</li>
+    <li>Registrar los kilos asignados a cada camión por salida.</li>
+    <li>Avisar cuando un viaje se cierra, con el detalle de zona y camión de los últimos 7 días.</li>
+  </ul>
+
+  <h3 id="s4-3">4.3. Características de los Usuarios <span class="badge">Buenas Prácticas UTN p.56/57</span></h3>
+  <table>
+    <tr><th>Tipo de usuario</th><th>Formación</th><th>Actividades</th></tr>
+    <tr>
+      <td><strong>Dueño / Administrador</strong><br>Roberto García</td>
+      <td>Más de 20 años al frente de Tres Reyes. Dificultad visual: necesita fuente grande (mín. 18px). Usa iPhone y PC de escritorio.</td>
+      <td>Acceso total: rutas, control de carga, reportes y configuración. Entrevistado en Abril 2026.</td>
+    </tr>
+    <tr>
+      <td><strong>Administrador operativo</strong><br>Facundo (equipo de Tres Reyes)</td>
+      <td>Nivel tecnológico 4/5, manejo fluido.</td>
+      <td>Acceso total: puede crear, editar y eliminar rutas, clientes y configuraciones del sistema.</td>
+    </tr>
+    <tr>
+      <td><strong>Repartidor</strong><br>Tomás</td>
+      <td>Nivel tecnológico 3/5. Necesita una interfaz muy simple.</td>
+      <td>Solo uso operativo en entrega: ve la hoja de ruta del día y marca entregas completadas. No puede modificar rutas ni ver datos de otros camiones.</td>
+    </tr>
+  </table>
+
+  <h3 id="s4-4">4.4. Restricciones <span class="badge">Buenas Prácticas UTN p.57</span></h3>
+
+  <h4>4.4.1. Políticas reguladoras</h4>
+  <p>El sistema se desarrolla 100% con software libre y de código abierto: PHP, MySQL/MariaDB, Vanilla JS, Leaflet, PDF.js y los servicios públicos de OpenStreetMap. No hay costo de licencias. El hosting actual (InfinityFree) es un plan gratuito. El repositorio de las presentaciones está publicado en GitHub Pages.</p>
+
+  <h4>4.4.2. Limitaciones de infraestructura</h4>
+  <p>El backend corre sobre hosting compartido gratuito (InfinityFree, base de datos en <code class="inline">sql113.infinityfree.com</code>), sin servidor propio. No hay hardware dedicado: el sistema depende de los dispositivos que Tres Reyes ya tiene (PC administrativa, celular del repartidor).</p>
+
+  <h4>4.4.3. Interfaces con otras aplicaciones</h4>
+  <p>El sistema se integra con <strong>Nominatim / OpenStreetMap</strong> para geocodificar direcciones y con <strong>OSRM</strong> para el cálculo de rutas. Usa la <strong>Geolocation API</strong> del navegador para el GPS real del repartidor. Reemplaza a WhatsApp como canal de coordinación (RF07, pendiente de sprint).</p>
+
+  <h4>4.4.4. Función de control</h4>
+  <p>Autenticación con usuario y contraseña (bcrypt) y roles diferenciados: administrador y repartidor. El repartidor no puede modificar rutas ni ver datos de otros camiones (RNF04).</p>
+
+  <h4>4.4.5. Requisitos del lenguaje</h4>
+  <p>Toda la interfaz está en <strong>español</strong>, con tipografía de al menos 18px por la dificultad visual de Roberto (RNF02), y un flujo de uso autoevidente pensado para un nivel tecnológico medio (RNF05: aprendizaje en menos de 20 minutos).</p>
+
+  <h4>4.4.6. Protocolos señalados</h4>
+  <p>Comunicación frontend–backend por <strong>HTTP/REST</strong> (JSON). Geocodificación vía Nominatim y ruteo vía OSRM, ambos por HTTP(S). CORS habilitado en el backend.</p>
+
+  <h4>4.4.7. Requisitos de fiabilidad</h4>
+  <p>El algoritmo de ruteo debe responder en <strong>menos de 5 segundos</strong> para hasta 50 destinos por salida (RNF01). El repartidor puede consultar su hoja de ruta sin conexión una vez descargada (RNF03, offline parcial).</p>
+
+  <h4>4.4.8. Credibilidad de la aplicación</h4>
+  <p>El panel muestra en tiempo real las boletas cargadas, el peso total y la cantidad de direcciones geolocalizadas apenas se sube el PDF del día, dando confianza inmediata de que el sistema está procesando los datos correctamente.</p>
+
+  <h4>4.4.9. Consideraciones de seguridad</h4>
+  <p>Las contraseñas se almacenan con <strong>bcrypt</strong> (<code class="inline">password_hash</code>), nunca en texto plano. Hay pendientes críticos identificados por el propio equipo (ver 4.6): mover la contraseña de la base de datos a un archivo <code class="inline">.env</code>, reemplazar el <code class="inline">sessionStorage</code> por JWT o sesión segura, auditar el 100% de las consultas SQL con <code class="inline">bind_param</code>, y forzar HTTPS antes de producción real (Nominatim lo exige).</p>
+
+  <h3 id="s4-5">4.5. Suposiciones y dependencias</h3>
+  <ul>
+    <li>Se asume disponibilidad continua de los servicios gratuitos de Nominatim y OSRM (tienen límites de uso).</li>
+    <li>El proyecto depende de que InfinityFree mantenga activo el hosting gratuito de backend y base de datos.</li>
+    <li>Se asume que los repartidores cuentan con datos móviles para usar la navegación GPS en tiempo real.</li>
+    <li>Roberto García mostró intención de seguir usando el sistema al ver el prototipo funcional (KR3 del Objetivo 5), lo que sostiene la viabilidad comercial del proyecto.</li>
+  </ul>
+
+  <h3 id="s4-6">4.6. Evolución previsible del sistema</h3>
+  <p class="lede">Extraído directamente del roadmap "Próximos pasos" del equipo, agrupado por urgencia.</p>
+  <p><strong style="color:var(--amber)">Crítico — antes de producción:</strong></p>
+  <ul>
+    <li>Mover la contraseña de la base de datos (<code class="inline">DB_PASS</code>) a un archivo <code class="inline">.env</code>, nunca en el código fuente.</li>
+    <li>Reemplazar <code class="inline">sessionStorage</code> por autenticación JWT o sesión real con tokens HTTP-only.</li>
+    <li>Auditar y preparar el 100% de las consultas SQL con <code class="inline">bind_param</code>.</li>
+    <li>Forzar HTTPS en <code class="inline">.htaccess</code> — Nominatim lo exige en producción.</li>
+  </ul>
+  <p><strong>Importante — próximo sprint:</strong></p>
+  <ul>
+    <li>RF06 — Alerta de sobrecarga o subutilización de un camión.</li>
+    <li>RF07 — Notificación al repartidor (reemplazo de WhatsApp) por push o SMS.</li>
+    <li>RF08 — Alerta de desvío de ruta.</li>
+    <li>Caché de geocodificación, para no repetir direcciones ya resueltas.</li>
+  </ul>
+  <p><strong>Mejoras — iteraciones futuras:</strong></p>
+  <ul>
+    <li>RF09 — Tracking en tiempo real de todos los camiones activos.</li>
+    <li>RF10 — Reporte de eficiencia por ruta (km, tiempo real vs. estimado, combustible).</li>
+    <li>App nativa (PWA o React Native) con soporte offline para el repartidor.</li>
+    <li>Dashboard de OKRs con métricas automáticas de adopción y ahorro.</li>
+  </ul>
+
+  <h4>Objetivos y Resultados Clave (OKRs)</h4>
+  <table>
+    <tr><th>Objetivo</th><th>Resultados clave (KR)</th></tr>
+    <tr><td><strong>1. Eliminar las rutas ineficientes y las dobles pasadas</strong></td><td>0 rutas con doble pasada en 30 días · Reducción de distancia recorrida ≥15%</td></tr>
+    <tr><td><strong>2. Automatizar la planificación diaria</strong></td><td>Armado de ruta &lt;2 min automáticos · 100% de hojas de ruta generadas por el sistema antes del primer envío</td></tr>
+    <tr><td><strong>3. Dar visibilidad total sobre la operación</strong></td><td>Roberto ve la ubicación de todos los camiones en tiempo real · 100% de desvíos notificados en &lt;3 min</td></tr>
+    <tr><td><strong>4. Controlar la carga por camión</strong></td><td>100% de salidas con registro de kg · 0 casos de sobrecarga no detectada en 10 salidas de prueba</td></tr>
+    <tr><td><strong>5. Adopción sin depender de WhatsApp</strong></td><td>Repartidor completa su jornada solo con la app · Aprendizaje ≤20 min con Tomás · Roberto declara intención de seguir usando el sistema</td></tr>
+  </table>
+</section>
+
+<section id="s5">
+  <h2><span class="num">5</span>Requisitos Específicos</h2>
+
+  <h3 id="s5-1">5.1. Requerimientos funcionales <span class="badge">Buenas Prácticas UTN p.59/60</span></h3>
+  <table>
+    <tr><th>ID</th><th>Requerimiento</th><th>Prioridad</th><th>Origen</th></tr>
+    <tr><td>RF01</td><td><strong>Generación automática de rutas por destinos.</strong> Calcula el recorrido más eficiente dado un conjunto de direcciones de entrega.</td><td><span class="badge alta">Alta</span></td><td>"Maps + WhatsApp para coordinar rutas"</td></tr>
+    <tr><td>RF02</td><td><strong>Generación de hoja de ruta digital.</strong> Produce la hoja ordenada y lista para cada repartidor, sin intervención manual.</td><td><span class="badge alta">Alta</span></td><td>"Armar las rutas nos lleva mucho tiempo"</td></tr>
+    <tr><td>RF03</td><td><strong>Vista de mapa con recorrido planificado.</strong> Paradas numeradas en orden óptimo sobre el mapa.</td><td><span class="badge alta">Alta</span></td><td>"Pasamos dos veces por el mismo lugar"</td></tr>
+    <tr><td>RF04</td><td><strong>Agrupación automática de destinos por zona.</strong> Elimina el backtracking al identificar zonas geográficas.</td><td><span class="badge alta">Alta</span></td><td>"Usamos más combustible del necesario"</td></tr>
+    <tr><td>RF05</td><td><strong>Control de carga (kg) por camión y salida.</strong> Registra los kilos de mercadería asignados a cada camión por viaje.</td><td><span class="badge media">Media</span></td><td>"No sé cuántos kilos lleva cada camión"</td></tr>
+    <tr><td>RF06</td><td><strong>Alerta de sobrecarga o subutilización.</strong> Notifica cuando un camión supera su capacidad o queda muy por debajo del óptimo.</td><td><span class="badge media">Media</span></td><td>Extensión de RF05, sprint siguiente</td></tr>
+    <tr><td>RF07</td><td><strong>Notificación de ruta al repartidor.</strong> Envío de la hoja de ruta al dispositivo del repartidor, reemplazando el WhatsApp actual.</td><td><span class="badge alta">Alta</span></td><td>"Es precario, quieren automatizarlo"</td></tr>
+    <tr><td>RF08</td><td><strong>Alerta de desvío de ruta.</strong> Avisa a Roberto cuando un repartidor no sigue la ruta optimizada prevista.</td><td><span class="badge media">Media</span></td><td>Control de gestión, sprint siguiente</td></tr>
+    <tr><td>RF09</td><td><strong>Tracking en tiempo real de camiones.</strong> Panel con la ubicación en vivo de todos los camiones activos.</td><td><span class="badge media">Media</span></td><td>Mejora futura</td></tr>
+    <tr><td>RF10</td><td><strong>Reporte de eficiencia por ruta.</strong> Historial de km recorridos, tiempo real vs. estimado y estimación de combustible.</td><td><span class="badge baja">Baja</span></td><td>Mejora futura</td></tr>
+  </table>
+
+  <h4>Requerimientos no funcionales (RNF)</h4>
+  <table>
+    <tr><th>ID</th><th>Requerimiento</th><th>Categoría</th></tr>
+    <tr><td>RNF01</td><td>Tiempo de respuesta del algoritmo ≤ 5 segundos para un máximo de 50 destinos por salida.</td><td>Rendimiento</td></tr>
+    <tr><td>RNF02</td><td>Fuente mínima de 18px, diseño legible en movimiento (dificultad visual de Roberto).</td><td>HCI</td></tr>
+    <tr><td>RNF03</td><td>Offline parcial: el repartidor consulta su hoja de ruta sin conexión una vez descargada.</td><td>Conectividad</td></tr>
+    <tr><td>RNF04</td><td>Aislamiento de permisos por perfil: el repartidor no modifica rutas ni ve otros camiones.</td><td>Seguridad</td></tr>
+    <tr><td>RNF05</td><td>Tiempo de aprendizaje ≤ 20 minutos para repartidores. Flujo autoevidente, sin manual.</td><td>Usabilidad</td></tr>
+    <tr><td>RNF06</td><td>Integración con API de mapas (OpenStreetMap / OSRM) para cálculo y visualización sobre mapa real de Argentina.</td><td>Plataforma</td></tr>
+  </table>
+
+  <h4>Limitaciones del alcance</h4>
+  <p class="lede">Definen qué no hace el sistema en esta entrega — un contrato de honestidad con el cliente, discutido antes de la firma (sección 9).</p>
+  <table>
+    <tr><th>Qué NO hace en esta entrega</th><th>Por qué</th></tr>
+    <tr><td><strong>No gestiona facturación ni contabilidad.</strong></td><td>No fue solicitado; queda fuera del alcance funcional acordado.</td></tr>
+    <tr><td><strong>No gestiona stock ni inventario.</strong></td><td>El foco del proyecto es el ruteo, no la gestión de mercadería en depósito.</td></tr>
+    <tr><td><strong>No liquida sueldos.</strong></td><td>Es un proceso administrativo ajeno a la logística de reparto.</td></tr>
+    <tr><td><strong>No se integra con sistemas de terceros en esta versión.</strong></td><td>Se prioriza primero la estabilidad del MVP propio.</td></tr>
+    <tr><td><strong>No incluye CRM ni gestión avanzada de clientes.</strong></td><td>Los datos de cliente hoy solo sirven para geocodificar la entrega.</td></tr>
+    <tr><td><strong>No soporta multiempresa.</strong></td><td>El sistema está diseñado y ajustado específicamente para la operación de Tres Reyes.</td></tr>
+  </table>
+
+  <h3 id="s5-2">5.2. Interfaces de usuario <span class="badge">Buenas Prácticas UTN p.58</span></h3>
+  <p>El único punto de contacto de Roberto, Facundo y Tomás con el sistema es el <strong>dashboard web</strong>: una SPA en negro con acentos verdes, coherente con la identidad visual del sistema. Es responsive y usa fuente grande (mín. 18px, RNF02) por la dificultad visual de Roberto. A diferencia de un proyecto que empieza desde cero, acá el equipo saltó directamente de la especificación de requerimientos a un MVP funcional en producción, por lo que la interfaz que sigue no es un mockup sino una captura real del panel administrativo hoy en uso.</p>
+  <div class="callout"><b>Interfaz real (Panel Admin):</b> menú lateral con las secciones Boletas, Armar viajes, Viajes del día, Tracking, Alertas, Reportes y Configuración. La pantalla de "Boletas del día" permite arrastrar un PDF o cargar manualmente, y muestra en vivo la cantidad de boletas cargadas, el peso total y cuántas direcciones fueron geolocalizadas.</div>
+
+  <h3 id="s5-3">5.3. Interfaz de hardware</h3>
+  <p><strong>No aplica.</strong> TruckRoute es un proyecto 100% software: no incluye sensores, placas ni dispositivos propios. Se apoya en hardware que Tres Reyes ya posee (PC de escritorio, celulares de Roberto y del repartidor), sin requerir instalación física alguna. Esta sección se mantiene en la documentación por consistencia de estructura con el resto de la carpeta.</p>
+
+  <h3 id="s5-4">5.4. Interfaces de software <span class="badge">Buenas Prácticas UTN p.59</span></h3>
+  <table>
+    <tr><th>ID</th><th>Componente</th><th>Tecnología / Stack</th><th>Rol en el sistema</th></tr>
+    <tr><td>ISW01</td><td><strong>Backend / API REST</strong></td><td>PHP 8 sin framework. Endpoints: boletas, viajes, config, alertas, login. CORS habilitado.</td><td>Lógica de negocio: ruteo (Nearest Neighbor + Haversine), estados del viaje.</td></tr>
+    <tr><td>ISW02</td><td><strong>Base de datos</strong></td><td>MySQL / MariaDB en InfinityFree (<code class="inline">sql113.infinityfree.com</code>). Charset UTF-8 MB4.</td><td>Persistencia central. 7 tablas: usuarios, repartidores, camiones, boletas, viajes, posiciones, alertas_sistema.</td></tr>
+    <tr><td>ISW03</td><td><strong>Dashboard (Frontend)</strong></td><td>Vanilla JS — SPA sin framework, un solo <code class="inline">index.html</code>. HTML5 + CSS3 responsive. Google Fonts Inter + DM Sans.</td><td>Capa de presentación: estado en tiempo real, historial, alertas y configuración.</td></tr>
+    <tr><td>ISW04</td><td><strong>Mapas y ruteo</strong></td><td>Leaflet 1.9 + Leaflet Routing Machine 3.2 (OSRM), tiles de OpenStreetMap.</td><td>Visualización del recorrido y navegación GPS giro a giro.</td></tr>
+    <tr><td>ISW05</td><td><strong>Parseo de boletas</strong></td><td>PDF.js 3.11, ejecutado en el cliente.</td><td>Extrae automáticamente nombre, dirección y peso de cada boleta cargada.</td></tr>
+    <tr><td>ISW06</td><td><strong>Geocodificación</strong></td><td>Nominatim / OpenStreetMap.</td><td>Convierte cada dirección en coordenadas para el ruteo.</td></tr>
+    <tr><td>ISW07</td><td><strong>Autenticación</strong></td><td>bcrypt (<code class="inline">password_hash</code>).</td><td>Login y control de acceso por rol (admin / repartidor). JWT pendiente (ver 4.6).</td></tr>
+  </table>
+
+  <h3 id="s5-5">5.5. Interfaces de comunicación <span class="badge">Buenas Prácticas UTN p.59</span></h3>
+  <table>
+    <tr><th>Interfaz</th><th>Protocolo / Formato</th><th>Detalle</th></tr>
+    <tr><td><strong>Dashboard → Backend</strong></td><td>HTTP / REST (JSON)</td><td>Endpoints para boletas, viajes, configuración, alertas y login.</td></tr>
+    <tr><td><strong>Backend → Nominatim</strong></td><td>HTTPS</td><td>Geocodificación de direcciones de las boletas.</td></tr>
+    <tr><td><strong>Backend → OSRM</strong></td><td>HTTP</td><td>Cálculo de rutas sobre <code class="inline">router.project-osrm.org</code>.</td></tr>
+    <tr><td><strong>Backend → Base de datos</strong></td><td>TCP / SQL</td><td>Conexión a MySQL/MariaDB en InfinityFree.</td></tr>
+    <tr><td><strong>Navegador (repartidor) → Geolocation API</strong></td><td>API del navegador</td><td>Obtiene la posición GPS real del repartidor para la navegación en vivo.</td></tr>
+  </table>
+
+  <h3 id="s5-6">5.6. Modelo Entidad-Relación de la base de datos</h3>
+  <p>Modelo reconstruido a partir de las 7 tablas ya existentes en la base de datos (<code class="inline">if0_42217493_base_datos</code>, InfinityFree): <strong>usuarios</strong>, <strong>repartidores</strong>, <strong>camiones</strong>, <strong>boletas</strong>, <strong>viajes</strong>, <strong>posiciones</strong> y <strong>alertas_sistema</strong>.</p>
+  <div class="callout todo"><b>A confirmar por el equipo:</b> solo tuve acceso a la lista de tablas y su cantidad de filas, no a la estructura interna de columnas de cada una. Las columnas y relaciones de abajo son una reconstrucción razonable a partir de los requerimientos (5.1) y componentes (5.4) — conviene que Silva (BD) las valide contra el diseño real antes de darlas por definitivas.</div>
+
+  <div class="er-wrap">
+    <div class="er-box core"><div class="head">USUARIOS</div><ul><li class="pk">id_usuario · PK</li><li>usuario</li><li>password_hash</li><li>rol (admin/repartidor)</li></ul></div>
+    <div class="er-box core"><div class="head">REPARTIDORES</div><ul><li class="pk">id_repartidor · PK</li><li class="fk">id_usuario · FK</li><li>nombre</li><li>estado</li></ul></div>
+    <div class="er-box core"><div class="head">CAMIONES</div><ul><li class="pk">id_camion · PK</li><li>patente</li><li>capacidad_kg</li><li>estado</li></ul></div>
+    <div class="er-box core"><div class="head">VIAJES</div><ul><li class="pk">id_viaje · PK</li><li class="fk">id_camion · FK</li><li class="fk">id_repartidor · FK</li><li>estado (armado…finalizado)</li></ul></div>
+    <div class="er-box vol"><div class="head">BOLETAS</div><ul><li class="pk">id_boleta · PK</li><li class="fk">id_viaje · FK</li><li>direccion, lat, lng</li><li>peso_kg</li></ul></div>
+    <div class="er-box vol"><div class="head">POSICIONES</div><ul><li class="pk">id_posicion · PK</li><li class="fk">id_viaje · FK</li><li>latitud, longitud</li><li>timestamp</li></ul></div>
+    <div class="er-box aux"><div class="head">ALERTAS_SISTEMA</div><ul><li class="pk">id_alerta · PK</li><li class="fk">id_viaje · FK</li><li>tipo, estado</li><li>timestamp</li></ul></div>
+  </div>
+  <div class="legend">
+    <span><span class="dot" style="background:var(--green)"></span>Entidades core (usuarios, flota, viajes)</span>
+    <span><span class="dot" style="background:var(--blue)"></span>Datos de alto volumen (boletas, posiciones)</span>
+    <span><span class="dot" style="background:var(--amber)"></span>Alertas / auxiliar</span>
+  </div>
+
+  <h4>Relaciones</h4>
+  <table>
+    <tr><th>Entidad</th><th>Card.</th><th>Entidad</th><th>Significado</th></tr>
+    <tr><td>USUARIOS</td><td>1 : 1</td><td>REPARTIDORES</td><td>Cada repartidor tiene un usuario de login asociado.</td></tr>
+    <tr><td>CAMIONES</td><td>1 : N</td><td>VIAJES</td><td>Un camión realiza muchos viajes a lo largo del tiempo.</td></tr>
+    <tr><td>REPARTIDORES</td><td>1 : N</td><td>VIAJES</td><td>Un repartidor conduce muchos viajes.</td></tr>
+    <tr><td>VIAJES</td><td>1 : N</td><td>BOLETAS</td><td>Un viaje agrupa varias boletas (paradas) ya ordenadas.</td></tr>
+    <tr><td>VIAJES</td><td>1 : N</td><td>POSICIONES</td><td>Un viaje en curso genera muchos registros de posición GPS.</td></tr>
+    <tr><td>VIAJES</td><td>1 : N</td><td>ALERTAS_SISTEMA</td><td>Un viaje puede disparar varias alertas (sobrecarga, desvío, cierre).</td></tr>
+  </table>
+
+  <h4>Esquema relacional (MySQL / MariaDB)</h4>
+  <pre>CREATE TABLE usuarios (
+  id_usuario     INT AUTO_INCREMENT PRIMARY KEY,
+  nombre         VARCHAR(80)  NOT NULL,
+  usuario        VARCHAR(50)  NOT NULL UNIQUE,
+  password_hash  VARCHAR(255) NOT NULL,
+  rol            ENUM('admin','repartidor') NOT NULL DEFAULT 'repartidor',
+  activo         TINYINT(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE repartidores (
+  id_repartidor  INT AUTO_INCREMENT PRIMARY KEY,
+  id_usuario     INT UNIQUE,
+  nombre         VARCHAR(80) NOT NULL,
+  telefono       VARCHAR(20),
+  estado         ENUM('activo','inactivo') NOT NULL DEFAULT 'activo',
+  FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE camiones (
+  id_camion      INT AUTO_INCREMENT PRIMARY KEY,
+  patente        VARCHAR(10) NOT NULL UNIQUE,
+  capacidad_kg   DECIMAL(8,2) NOT NULL,
+  estado         ENUM('disponible','en_ruta','fuera_de_servicio') NOT NULL DEFAULT 'disponible'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE viajes (
+  id_viaje       INT AUTO_INCREMENT PRIMARY KEY,
+  id_camion      INT NOT NULL,
+  id_repartidor  INT NOT NULL,
+  fecha          DATE NOT NULL,
+  zona           VARCHAR(60),
+  estado         ENUM('armado','confirmado','iniciado','finalizado') NOT NULL DEFAULT 'armado',
+  distancia_km   DECIMAL(6,2),
+  hora_inicio    DATETIME,
+  hora_fin       DATETIME,
+  FOREIGN KEY (id_camion) REFERENCES camiones(id_camion),
+  FOREIGN KEY (id_repartidor) REFERENCES repartidores(id_repartidor)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE boletas (
+  id_boleta      INT AUTO_INCREMENT PRIMARY KEY,
+  id_viaje       INT,
+  cliente        VARCHAR(120),
+  direccion      VARCHAR(160) NOT NULL,
+  latitud        DECIMAL(10,7),
+  longitud       DECIMAL(10,7),
+  peso_kg        DECIMAL(8,2) NOT NULL,
+  orden_parada   INT,
+  fecha          DATE NOT NULL,
+  FOREIGN KEY (id_viaje) REFERENCES viajes(id_viaje)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE posiciones (
+  id_posicion    INT AUTO_INCREMENT PRIMARY KEY,
+  id_viaje       INT NOT NULL,
+  latitud        DECIMAL(10,7) NOT NULL,
+  longitud       DECIMAL(10,7) NOT NULL,
+  timestamp      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (id_viaje) REFERENCES viajes(id_viaje)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE alertas_sistema (
+  id_alerta      INT AUTO_INCREMENT PRIMARY KEY,
+  id_viaje       INT,
+  tipo           ENUM('sobrecarga','subutilizacion','desvio_ruta','cierre') NOT NULL,
+  mensaje        VARCHAR(160),
+  estado         ENUM('activa','resuelta') NOT NULL DEFAULT 'activa',
+  timestamp      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (id_viaje) REFERENCES viajes(id_viaje)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;</pre>
+</section>
+
+<section id="s6">
+  <h2><span class="num">6</span>Oferta de Gestión</h2>
+
+  <h3>6.1. GANTT</h3>
+  <p>Cronograma de tareas, responsables y duración estimada, organizado por etapas (E01 a E06). Se lleva en <a href="https://docs.google.com/spreadsheets/d/1FuAuQJFAjjr4MF3At7QOEdmFyjWleegwSiqmdQG4tVY/edit?usp=drivesdk" target="_blank">Google Sheets</a> y se actualiza a medida que avanza el proyecto.</p>
+  <table>
+    <tr><th>Etapa</th><th>Tareas principales</th><th>Entregable</th></tr>
+    <tr><td>E01</td><td>Entrevista a Roberto García, identificación del problema real y línea de base.</td><td>Definición del problema, síntomas vs. causas (ver árbol de problemas, sección 2).</td></tr>
+    <tr><td>E02</td><td>Análisis de factibilidad técnica, económica y de gestión.</td><td>Requerimientos preliminares (RF/RNF).</td></tr>
+    <tr><td>E03</td><td>Diseño del sistema: RF/RNF/ISW, arquitectura, modelo de datos (5.6).</td><td>Especificación de requerimientos + ER.</td></tr>
+    <tr><td>E04</td><td>Desarrollo del MVP: importación de boletas, geocodificación, ruteo, gestión de viajes.</td><td>MVP TruckRoute funcional en producción.</td></tr>
+    <tr><td>E05</td><td>Endurecimiento de seguridad (roadmap crítico), nuevas alertas (RF06-08), documentación.</td><td>Sistema listo para producción real + documentación completa.</td></tr>
+    <tr><td>E06</td><td>Presentación profesional, defensa y pitch de negocio.</td><td>Presentación final.</td></tr>
+  </table>
+  <div class="callout todo"><b>A completar por el equipo:</b> fechas de inicio/fin y responsables por tarea, según el cronograma de Google Sheets (aún sin ajustar del todo).</div>
+
+  <h3>6.2. Infraestructura administrativa <span class="badge">Buenas Prácticas UTN p.62</span></h3>
+  <table>
+    <tr><th>Grupo</th><th>Rol</th><th>Función</th></tr>
+    <tr><td rowspan="1"><strong>Dirección y Gestión</strong></td><td>Project Manager + UX/UI</td><td>Gestión temporal y de alcance, relación con el cliente, diseño de interfaz.</td></tr>
+    <tr><td><strong>Desarrollo</strong></td><td>Backend / API</td><td>Servidor PHP, algoritmos de ruteo, integración con Nominatim y OSRM.</td></tr>
+    <tr><td></td><td>Base de datos</td><td>Modelo de datos, consultas y backups en MySQL/MariaDB.</td></tr>
+    <tr><td></td><td>Frontend</td><td>Dashboard SPA, mapas y validación de interfaz con el usuario.</td></tr>
+  </table>
+  <div class="grid2" style="margin-top:16px;">
+    <div class="card"><h4>Gestión de tareas</h4><p>Google Sheets (cronograma / GANTT y control de cambios).</p></div>
+    <div class="card"><h4>Repositorio</h4><p>GitHub Pages (presentaciones del proyecto); código del MVP alojado junto al hosting de InfinityFree.</p></div>
+    <div class="card"><h4>Diseño de interfaz</h4><p>Diseñada e iterada directamente en HTML/CSS sobre el MVP ya en producción, en lugar de un mockup previo en Figma.</p></div>
+    <div class="card"><h4>Comunicación</h4><p class="lede" style="margin:0"><strong style="color:var(--amber)">A completar por el equipo.</strong></p></div>
+  </div>
+</section>
+
+<section id="s7">
+  <h2><span class="num">7</span>Oferta Económica</h2>
+  <div class="callout todo"><b>A completar por el equipo.</b> No se relevaron costos de insumos, hosting pago ni honorarios. Como referencia: hoy el proyecto no tiene costos de licencia (stack 100% open-source) ni de hosting (plan gratuito de InfinityFree); un costo a estimar a futuro es el de un servicio de SMS/push para RF07 y, si el tráfico crece, un plan de hosting pago con HTTPS propio.</div>
+</section>
+
+<section id="s8">
+  <h2><span class="num">8</span>Estimación Económica</h2>
+  <table>
+    <tr><th>Rubro</th><th>Detalle</th><th>Monto</th></tr>
+    <tr><td><strong>Hosting / infraestructura</strong></td><td>Actualmente gratuito (InfinityFree); a definir si se migra a un plan pago.</td><td>A completar</td></tr>
+    <tr><td><strong>Servicios externos</strong></td><td>Notificaciones push/SMS (RF07), eventual plan de mapas con mayor cuota.</td><td>A completar</td></tr>
+    <tr><td><strong>Horas hombre</strong></td><td>Desarrollo, diseño y endurecimiento de seguridad, por categoría y costo/hora.</td><td>A completar</td></tr>
+    <tr><td><strong>Total estimado</strong></td><td>Suma de los rubros anteriores.</td><td>A completar</td></tr>
+  </table>
+</section>
+
+<section id="s9">
+  <h2><span class="num">9</span>Contrato</h2>
+  <p>Documento que explicita el acuerdo entre el equipo desarrollador y el cliente, Roberto García (Tres Reyes — Aceitunas y Encurtidos, San Miguel).</p>
+
+  <h4>9.1. Objetivo del proyecto</h4>
+  <p>Desarrollar y mantener TruckRoute, un sistema de ruteo logístico que calcula rutas óptimas, controla la carga por camión y hace seguimiento de los repartos de Tres Reyes, para eliminar el uso manual de Google Maps y WhatsApp.</p>
+
+  <h4>9.2. Partes involucradas</h4>
+  <p>Equipo desarrollador (integrantes y roles según 3.3) y cliente: Roberto García, dueño de Tres Reyes — Aceitunas y Encurtidos, San Miguel, Buenos Aires.</p>
+
+  <h4>9.3. Alcance</h4>
+  <p>Se entrega lo definido en 3.2 y 5 (RF01 a RF10, según prioridad). Queda fuera lo listado en las Limitaciones (5.1): facturación, stock, liquidación de sueldos, integración con terceros, CRM avanzado y soporte multiempresa.</p>
+
+  <h4>9.4. Plazos</h4>
+  <p>Fechas clave según el cronograma (6.1): a completar una vez ajustadas las fechas en el Google Sheets del proyecto.</p>
+
+  <h4>9.5. Responsabilidades</h4>
+  <p>El equipo: desarrollo, endurecimiento de seguridad, puesta en marcha y documentación. El cliente: validar requerimientos y prototipo, y proveer acceso a las boletas y a la operación diaria para las pruebas.</p>
+
+  <h4>9.6. Criterios de aceptación</h4>
+  <p>Se apoyan en los OKRs del proyecto (4.6): 0 rutas con doble pasada en los primeros 30 días, reducción de distancia recorrida ≥15%, armado de ruta automático en menos de 2 minutos, y que el repartidor complete su jornada usando solo la app.</p>
+
+  <h4>9.7. Condiciones de modificación</h4>
+  <p>Todo cambio de alcance solicitado durante el desarrollo se registra en el control de cambios (sección 1) y se evalúa su impacto en el GANTT antes de aceptarse.</p>
+
+  <h4>9.8. Firmas</h4>
+  <p>Firma del equipo desarrollador y de Roberto García (simbólica, en la validación del prototipo).</p>
+</section>
+
+<section id="s10">
+  <h2><span class="num">10</span>Bitácora del Proyecto</h2>
+  <p>Documento de trabajo del equipo. Registra la investigación de campo (entrevistas y minutas) y el seguimiento de la iteración (cambios sobre la interfaz y avances técnicos por etapa). A diferencia del resto de la carpeta, no describe el sistema sino el proceso, y se actualiza a medida que el proyecto avanza.</p>
+  <div class="callout todo"><b>Criterio de registro</b><br>Se anota cada instancia de contacto con el cliente y cada hito técnico cerrado, con su fecha. Cuando una de esas instancias deriva en un cambio de alcance o de requerimiento, se replica como fila nueva en el Control de Cambios (sección 1).</div>
+
+  <h3 id="s10-1">10.1. Registro de Entrevistas</h3>
+  <p>Instancias de relevamiento con el cliente y con los usuarios de Tres Reyes. Cada entrevista alimenta un apartado concreto de esta carpeta, por eso se registra el objetivo junto a la fecha.</p>
+  <table>
+    <tr><th>Fecha</th><th>Con quién</th><th>Objetivo</th><th>Modalidad</th></tr>
+    <tr><td>Abril 2026</td><td>Roberto García, Facundo y Tomás</td><td><strong>Entrevista estructurada (Embudo + Sondeo).</strong> Identificación del problema real, línea de base y perfiles de usuario (formulario v2, escala Likert 1–5).</td><td>Presencial</td></tr>
+    <tr><td>A completar</td><td>Roberto García</td><td><strong>Validación del MVP.</strong> Feedback sobre el panel administrativo de TruckRoute antes de sumar las alertas (RF06-08).</td><td>Presencial / Virtual</td></tr>
+  </table>
+  <div class="callout todo"><b>A completar por el equipo:</b> cargar la fecha real de cada instancia a medida que se concreta y sumar una fila por cada entrevista adicional. Lo conversado en cada una se vuelca en la minuta correspondiente (10.2).</div>
+
+  <h3 id="s10-2">10.2. Minutas de Reunión</h3>
+  <p>Acta breve de cada reunión con el cliente o del equipo. Se completa una minuta por reunión, siempre con los mismos seis campos, para que cualquier participante pueda reconstruir qué se decidió y quién quedó a cargo de qué.</p>
+  <h4>Plantilla de minuta</h4>
+  <table>
+    <tr><td><strong>Fecha y duración</strong></td><td>Día de la reunión y tiempo efectivo. Permite después comparar el esfuerzo real contra el estimado.</td></tr>
+    <tr><td><strong>Participantes</strong></td><td>Quiénes estuvieron, con su rol (equipo de proyecto y, si corresponde, cliente).</td></tr>
+    <tr><td><strong>Objetivo</strong></td><td>Para qué se convocó la reunión, en una sola frase.</td></tr>
+    <tr><td><strong>Temas tratados</strong></td><td>Puntos recorridos durante la reunión, en el orden en que se trataron.</td></tr>
+    <tr><td><strong>Decisiones y acuerdos</strong></td><td>Qué quedó definido. Es el campo que puede generar una fila en el Control de Cambios (sección 1).</td></tr>
+    <tr><td><strong>Próximos pasos y responsables</strong></td><td>Tareas que salen de la reunión, cada una con su responsable y su fecha comprometida.</td></tr>
+  </table>
+
+  <h4>Minuta 01 · Validación del MVP con Roberto García</h4>
+  <table>
+    <tr><td><strong>Fecha y duración</strong></td><td>A completar. Duración estimada: 45 minutos.</td></tr>
+    <tr><td><strong>Participantes</strong></td><td>Roberto García (cliente, dueño de Tres Reyes), Varela (PM / UX-UI) y Facundo (Frontend) por el equipo.</td></tr>
+    <tr><td><strong>Objetivo</strong></td><td>Validar el panel administrativo de TruckRoute (Boletas, Armar viajes, Tracking) con el usuario real antes de sumar las alertas de sobrecarga y desvío.</td></tr>
+    <tr><td><strong>Temas tratados</strong></td><td>Recorrido de las pantallas de carga de boletas, armado de viajes y alertas de cierre; lectura de la tabla de Limitaciones del alcance (5.1); prueba del panel en el iPhone de Roberto.</td></tr>
+    <tr><td><strong>Decisiones y acuerdos</strong></td><td>Confirmar tipografía mínima de 18px por la dificultad visual de Roberto (RNF02); mantener el lenguaje simple sin jerga técnica; restringir la edición de configuración al perfil administrador.</td></tr>
+    <tr><td><strong>Próximos pasos y responsables</strong></td><td>Backend (Traverso / Crupi) implementa RF06 y RF08; el PM abre la fila correspondiente en el Control de Cambios (sección 1) y evalúa el impacto en el GANTT (6.1).</td></tr>
+  </table>
+  <div class="callout todo"><b>A completar por el equipo:</b> sumar una minuta por cada reunión, respetando los seis campos de la plantilla. Las fechas se cargan al concretarse cada instancia.</div>
+
+  <h3 id="s10-3">10.3. Registro de Cambios del Mockup</h3>
+  <p>A diferencia de un proyecto que parte de un mockup en Figma, el equipo diseñó la interfaz iterando directamente sobre el MVP ya en producción (ver 6.2). Por eso este apartado registra cambios reales de interfaz en lugar de versiones de un prototipo estático — es la trazabilidad de la iteración con el usuario.</p>
+  <table>
+    <tr><th>Componente modificado</th><th>Qué se modificó tras la validación</th><th>Por qué (justificación UX / usuario)</th></tr>
+    <tr><td><strong>Comunicación de estado</strong></td><td>Los estados del viaje se muestran en lenguaje simple (armado, confirmado, iniciado, finalizado) en vez de códigos internos.</td><td>Facundo y Tomás tienen niveles tecnológicos distintos (4/5 y 3/5); Tomás necesita un flujo autoevidente (RNF05).</td></tr>
+    <tr><td><strong>Tipografía / accesibilidad</strong></td><td>Se aumentó el tamaño de fuente a un mínimo de 18px en las pantallas principales del panel.</td><td>Roberto declara dificultad visual (RNF02).</td></tr>
+    <tr><td><strong>Roles y permisos</strong></td><td>Se restringió la edición de rutas y configuración al perfil administrador; el repartidor solo ve y marca su propia hoja de ruta.</td><td>Pedido explícito en la entrevista: separar el acceso total del acceso operativo (RF06, RNF04).</td></tr>
+  </table>
+  <div class="callout"><b>Trazabilidad de la iteración</b><br>Cada fila de esta tabla nace de una minuta (10.2) y, cuando implica un cambio de requerimiento o de alcance, se replica como fila nueva en el Control de Cambios (sección 1). Así el panel validado queda unido a la especificación por una cadena de evidencia completa.</div>
+
+  <h3 id="s10-4">10.4. Bitácora de Avances Técnicos</h3>
+  <p>Hitos técnicos cerrados, en orden cronológico, siguiendo las etapas del cronograma (6.1). Registrar la fecha real de cierre permite comparar el avance efectivo contra el GANTT planificado.</p>
+  <table>
+    <tr><th>Etapa</th><th>Hitos registrados</th><th>Fecha de cierre</th></tr>
+    <tr><td>E01</td><td>Entrevista a Roberto García, Facundo y Tomás (Abril 2026). Relevamiento del problema real y línea de base (dobles pasadas, combustible, control de carga).</td><td>A completar</td></tr>
+    <tr><td>E02</td><td>Análisis de factibilidad técnica, económica y de gestión sobre el método actual (Maps + WhatsApp).</td><td>A completar</td></tr>
+    <tr><td>E03</td><td>Especificación de RF, RNF e ISW. Definición de la arquitectura en tres capas y del modelo entidad-relación de la base de datos (5.6).</td><td>A completar</td></tr>
+    <tr><td>E04</td><td>Desarrollo del MVP TruckRoute: importación de boletas, geocodificación, ruteo, gestión de viajes.</td><td>A completar</td></tr>
+    <tr><td>E05</td><td>Endurecimiento de seguridad (roadmap crítico) y nuevas alertas (RF06-08).</td><td>A completar</td></tr>
+    <tr><td>E06</td><td>Presentación profesional del proyecto y pitch de negocio.</td><td>A completar</td></tr>
+  </table>
+  <div class="callout todo"><b>Criterio de cierre</b><br>Un hito se da por cerrado cuando su entregable está verificado, no cuando se termina de trabajar en él. Los desvíos respecto del GANTT (6.1) se anotan en la fila correspondiente y se revisan en la reunión siguiente, con su minuta (10.2).</div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><strong>TruckRoute</strong> · Documentación del Proyecto · Caso Roberto García, Tres Reyes — Aceitunas y Encurtidos (San Miguel, Buenos Aires).<br>
+    Evaluación de Proyectos · 7mo Informática 2026 · Instituto Leonardo Murialdo · Prof. Pedaci, Lourdes</p>
+  </div>
+</footer>
+
+</body>
+</html>
