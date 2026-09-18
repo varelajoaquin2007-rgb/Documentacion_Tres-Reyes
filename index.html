@@ -105,9 +105,117 @@
 
   footer{border-top:1px solid var(--border);padding:36px 0 60px;color:var(--text-dim);font-size:.85rem;}
   footer strong{color:var(--text);}
+
+  /* ---- Layout con sidebar fija ---- */
+  .layout{display:flex;align-items:flex-start;}
+  .sidebar{
+    width:270px;flex:0 0 270px;height:100vh;position:sticky;top:0;overflow-y:auto;
+    border-right:1px solid var(--border);background:var(--surface);
+    padding:22px 16px 40px;
+  }
+  .sidebar-brand{padding:4px 8px 18px;border-bottom:1px solid var(--border);margin-bottom:14px;}
+  .sidebar-brand strong{display:block;color:#fff;font-family:'DM Sans',sans-serif;font-size:1.05rem;}
+  .sidebar-brand span{color:var(--text-dim);font-size:.78rem;}
+  .nav-btns{display:flex;flex-direction:column;gap:8px;margin:0 0 18px;}
+  .nav-btn{
+    display:flex;align-items:center;justify-content:center;gap:7px;
+    border:1px solid var(--green);color:var(--green)!important;
+    border-radius:8px;padding:9px 10px;font-size:.82rem;font-weight:600;
+    text-decoration:none!important;background:rgba(61,220,132,.06);
+  }
+  .nav-btn:hover{background:var(--green);color:#0a0f0c!important;}
+  .nav-btn.secondary{border-color:var(--border);color:var(--text-dim)!important;background:transparent;}
+  .nav-btn.secondary:hover{border-color:var(--blue);color:var(--blue)!important;background:rgba(90,180,232,.08);}
+  .sidebar details{margin-bottom:4px;}
+  .sidebar summary{
+    cursor:pointer;list-style:none;color:var(--text-dim);font-size:.72rem;font-weight:700;
+    text-transform:uppercase;letter-spacing:.04em;padding:10px 8px 6px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .sidebar summary::-webkit-details-marker{display:none;}
+  .sidebar summary::after{content:'▾';color:var(--text-dim);font-size:.7rem;}
+  .sidebar details[open] summary::after{content:'▴';}
+  .sidebar nav a{
+    display:block;color:var(--text);font-size:.85rem;padding:6px 8px;border-radius:6px;
+    text-decoration:none;
+  }
+  .sidebar nav a.sub{padding-left:20px;color:var(--text-dim);font-size:.8rem;}
+  .sidebar nav a:hover{background:var(--surface-2);color:var(--green);text-decoration:none;}
+  .sidebar nav a.active{background:rgba(61,220,132,.1);color:var(--green);}
+  .sidebar-end-btns{border-top:1px solid var(--border);margin-top:12px;padding-top:16px;}
+  .content-area{flex:1 1 auto;min-width:0;}
+
+  @media (max-width:880px){
+    .layout{flex-direction:column;}
+    .sidebar{width:100%;flex:none;height:auto;position:relative;border-right:none;border-bottom:1px solid var(--border);}
+  }
 </style>
 </head>
 <body>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><strong>TruckRoute</strong><span>Tres Reyes — Documentación</span></div>
+
+    <div class="nav-btns">
+      <a class="nav-btn" href="https://varelajoaquin2007-rgb.github.io/QuickStartGuide_TresReyes/" target="_blank" rel="noopener">🚀 Guía de Inicio Rápido</a>
+      <a class="nav-btn" href="https://varelajoaquin2007-rgb.github.io/FAQs_Tresreyes/" target="_blank" rel="noopener">❓ FAQs</a>
+    </div>
+
+    <nav>
+      <details open>
+        <summary>Primera sección</summary>
+        <a href="#s1">1 · Control de Cambios</a>
+        <a href="#s2">2 · Diagnóstico: Árbol de Problemas</a>
+        <a href="#s3">3 · Introducción</a>
+        <a class="sub" href="#s3-1">3.1 Propósito</a>
+        <a class="sub" href="#s3-2">3.2 Alcance</a>
+        <a class="sub" href="#s3-3">3.3 Personal Involucrado</a>
+        <a class="sub" href="#s3-4">3.4 Definiciones y acrónimos</a>
+        <a class="sub" href="#s3-5">3.5 Referencias</a>
+        <a class="sub" href="#s3-6">3.6 Resumen Ejecutivo</a>
+      </details>
+      <details open>
+        <summary>Segunda sección</summary>
+        <a href="#s4">4 · Descripción General</a>
+        <a class="sub" href="#s4-1">4.1 Perspectiva</a>
+        <a class="sub" href="#s4-2">4.2 Funcionalidad</a>
+        <a class="sub" href="#s4-3">4.3 Usuarios</a>
+        <a class="sub" href="#s4-4">4.4 Restricciones</a>
+        <a class="sub" href="#s4-5">4.5 Suposiciones</a>
+        <a class="sub" href="#s4-6">4.6 Evolución previsible</a>
+      </details>
+      <details open>
+        <summary>Tercera sección</summary>
+        <a href="#s5">5 · Requisitos Específicos</a>
+        <a class="sub" href="#s5-1">5.1 Funcionales</a>
+        <a class="sub" href="#s5-2">5.2 Interfaz de usuario</a>
+        <a class="sub" href="#s5-3">5.3 Interfaz de hardware</a>
+        <a class="sub" href="#s5-4">5.4 Interfaz de software</a>
+        <a class="sub" href="#s5-5">5.5 Comunicación</a>
+        <a class="sub" href="#s5-6">5.6 Modelo Entidad-Relación</a>
+        <a href="#s6">6 · Oferta de Gestión</a>
+        <a href="#s7">7 · Oferta Económica</a>
+        <a href="#s8">8 · Estimación Económica</a>
+        <a href="#s9">9 · Contrato</a>
+      </details>
+      <details open>
+        <summary>Seguimiento</summary>
+        <a href="#s10">10 · Bitácora del Proyecto</a>
+        <a class="sub" href="#s10-1">10.1 Registro de Entrevistas</a>
+        <a class="sub" href="#s10-2">10.2 Minutas de Reunión</a>
+        <a class="sub" href="#s10-3">10.3 Registro de Cambios del Mockup</a>
+        <a class="sub" href="#s10-4">10.4 Bitácora de Avances Técnicos</a>
+      </details>
+    </nav>
+
+    <div class="nav-btns sidebar-end-btns">
+      <a class="nav-btn" href="https://varelajoaquin2007-rgb.github.io/QuickStartGuide_TresReyes/" target="_blank" rel="noopener">🚀 Guía de Inicio Rápido</a>
+      <a class="nav-btn secondary" href="https://varelajoaquin2007-rgb.github.io/FAQs_Tresreyes/" target="_blank" rel="noopener">❓ FAQs</a>
+    </div>
+  </aside>
+
+  <div class="content-area">
 
 <header class="hero">
   <div class="wrap">
@@ -115,53 +223,6 @@
     <h1>TruckRoute — Sistema de ruteo logístico para Tres Reyes</h1>
     <p class="sub">Documentación técnica, operativa y económica del proyecto. Sistema de software (backend + dashboard web) para calcular rutas óptimas, controlar la carga por camión y hacer seguimiento de los repartos de Tres Reyes — Aceitunas y Encurtidos, San Miguel, Buenos Aires.</p>
     <p class="lede"><strong style="color:#fff">Cliente:</strong> Roberto García · Tres Reyes — Aceitunas y Encurtidos, San Miguel &nbsp;·&nbsp; <strong style="color:#fff">Materia:</strong> Evaluación de Proyectos &nbsp;·&nbsp; <strong style="color:#fff">Docente:</strong> Prof. Pedaci, Lourdes &nbsp;·&nbsp; <strong style="color:#fff">Ciclo:</strong> 7mo Informática 2026 · Instituto Leonardo Murialdo</p>
-
-    <nav class="toc">
-      <div class="col">
-        <p class="label">PRIMERA SECCIÓN</p>
-        <a href="#s1">1 · Control de Cambios</a>
-        <a href="#s2">2 · Diagnóstico: Árbol de Problemas y Soluciones</a>
-        <a href="#s3">3 · Introducción</a>
-        <a href="#s3-1">3.1 Propósito</a>
-        <a href="#s3-2">3.2 Alcance</a>
-        <a href="#s3-3">3.3 Personal Involucrado</a>
-        <a href="#s3-4">3.4 Definiciones y acrónimos</a>
-        <a href="#s3-5">3.5 Referencias</a>
-        <a href="#s3-6">3.6 Resumen Ejecutivo</a>
-      </div>
-      <div class="col">
-        <p class="label">SEGUNDA SECCIÓN</p>
-        <a href="#s4">4 · Descripción General</a>
-        <a href="#s4-1">4.1 Perspectiva</a>
-        <a href="#s4-2">4.2 Funcionalidad</a>
-        <a href="#s4-3">4.3 Usuarios</a>
-        <a href="#s4-4">4.4 Restricciones</a>
-        <a href="#s4-5">4.5 Suposiciones</a>
-        <a href="#s4-6">4.6 Evolución previsible</a>
-      </div>
-      <div class="col">
-        <p class="label">TERCERA SECCIÓN</p>
-        <a href="#s5">5 · Requisitos Específicos</a>
-        <a href="#s5-1">5.1 Funcionales</a>
-        <a href="#s5-2">5.2 Interfaz de usuario</a>
-        <a href="#s5-3">5.3 Interfaz de hardware</a>
-        <a href="#s5-4">5.4 Interfaz de software</a>
-        <a href="#s5-5">5.5 Comunicación</a>
-        <a href="#s5-6">5.6 Modelo Entidad-Relación</a>
-        <a href="#s6">6 · Oferta de Gestión</a>
-        <a href="#s7">7 · Oferta Económica</a>
-        <a href="#s8">8 · Estimación Económica</a>
-        <a href="#s9">9 · Contrato</a>
-      </div>
-      <div class="col">
-        <p class="label">SEGUIMIENTO</p>
-        <a href="#s10">10 · Bitácora del Proyecto</a>
-        <a href="#s10-1">10.1 Registro de Entrevistas</a>
-        <a href="#s10-2">10.2 Minutas de Reunión</a>
-        <a href="#s10-3">10.3 Registro de Cambios del Mockup</a>
-        <a href="#s10-4">10.4 Bitácora de Avances Técnicos</a>
-      </div>
-    </nav>
   </div>
 </header>
 
@@ -745,6 +806,22 @@ CREATE TABLE alertas_sistema (
     Evaluación de Proyectos · 7mo Informática 2026 · Instituto Leonardo Murialdo · Prof. Pedaci, Lourdes</p>
   </div>
 </footer>
+
+  </div>
+</div>
+
+<script>
+  // Resalta en el menú lateral la sección visible mientras se hace scroll
+  const links = document.querySelectorAll('.sidebar nav a[href^="#"]');
+  const targets = Array.from(links).map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const setActive = (id) => {
+    links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+  };
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) setActive(entry.target.id); });
+  }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+  targets.forEach(t => observer.observe(t));
+</script>
 
 </body>
 </html>
