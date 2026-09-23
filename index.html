@@ -376,7 +376,10 @@ header.hero, body>header:not(.landing-header){position:relative}
     <tr><th>Versión</th><th>Fecha</th><th>Responsable</th><th>Detalle del cambio</th></tr>
     <tr><td>0.1</td><td>04/05/2026</td><td>Equipo</td><td>Cierre de E01 - Definición de proyecto: entrevistas al cliente (20/4 y 27/4), análisis de resultados y primera presentación. Identificación del problema y árbol de causas (sección 2).</td></tr>
     <tr><td>0.2</td><td>06/07/2026</td><td>Equipo</td><td>Segunda presentación (cierre de E02 - Mockup): flujo de carga de boletas, primer mock-up, despliegue inicial en InfinityFree (<code class="inline">tres-reyes-logistica.page.gd</code>).</td></tr>
-    <tr><td>0.3</td><td>25 al 28/08/2026</td><td>D01 (Traverso)</td><td>Migración del servicio de geocodificación y mapas de Nominatim/OSRM a las APIs de Google (Geocoding API + Maps JavaScript API), integradas en el panel de administrador (Tracking y Viajes). Impacto evaluado sobre ISW06 (sección 5.4).</td></tr>
+    <tr><td>0.3</td><td>25 al 28/08/2026</td><td>D01 (Traverso)</td><td>Migración de la geocodificación (Nominatim/OSM y luego LocationIQ) y de los mapas (Leaflet/OSRM) a las APIs de Google (Geocoding API + Maps JavaScript API). Impacto evaluado sobre ISW04 e ISW06 (sección 5.4).</td></tr>
+    <tr><td>0.4</td><td>06/09/2026</td><td>PM (Varela)</td><td>Cambios de alcance acordados con Roberto en la tercera entrevista (minuta 02, 10.2): unificación de zonas con el mismo camión, paradas visibles en el mapa de Tracking, botón "Agregar parada" a viaje activo, agrupación de boletas del mismo cliente y dirección en una sola parada, estado "En viaje" de los repartidores y baja del correo con código de seguridad al cliente que recibe la entrega.</td></tr>
+    <tr><td>0.5</td><td>09/2026</td><td>D01 (Traverso) · D02 (Crupi)</td><td>El orden de paradas pasa a calcularlo Google Routes API (<code class="inline">optimizeWaypointOrder</code>), en reemplazo de Nearest Neighbor + Haversine (ISW04b). Google Maps JavaScript API reemplaza a Leaflet en los tres mapas del sistema (Viajes pendientes, Tracking y mapa del repartidor). Se suman puntos de finalización configurables, boletas pospuestas y el panel mobile del admin (10.3).</td></tr>
+    <tr><td>0.6</td><td>22/09/2026</td><td>Equipo</td><td>Creación de las tablas <code class="inline">posiciones</code> y <code class="inline">alertas_sistema</code> con <code class="inline">migracion_tracking.sql</code>: el código de tracking y alertas ya existía, pero las tablas nunca se habían creado y los errores se descartaban en silencio. Desde esta fecha RF08 y RF09 funcionan en producción. Mapa de Tracking con pin fijo de fábrica, colores por viaje para varios repartidores simultáneos e íconos propios (5.6, 10.3).</td></tr>
   </table>
   <div class="callout todo"><b>Nota:</b> el rol UX/UI de Varela no fue un cambio de alcance posterior — el Gantt confirma que estuvo asignado junto al de PM desde la tarea 1.1 (01/04/2026). No genera una fila propia en este control de cambios; queda reflejado directamente en 3.3 (Personal Involucrado).</div>
 </section>
@@ -425,7 +428,7 @@ header.hero, body>header:not(.landing-header){position:relative}
   <p>Cada <strong>medio</strong> del árbol de soluciones neutraliza una causa identificada más arriba, y se convierte después en uno o varios requerimientos del sistema.</p>
   <table>
     <tr><th>Medio</th><th>Causa que neutraliza</th></tr>
-    <tr><td><strong>Algoritmo de ruteo automático</strong><br><span class="lede" style="font-size:.85em">Nearest Neighbor + distancia Haversine.</span></td><td>No hay ruteo automático.</td></tr>
+    <tr><td><strong>Algoritmo de ruteo automático</strong><br><span class="lede" style="font-size:.85em">Optimización del orden de paradas con Google Routes API.</span></td><td>No hay ruteo automático.</td></tr>
     <tr><td><strong>Hoja de ruta digital y notificación al repartidor</strong></td><td>Coordinación por WhatsApp.</td></tr>
     <tr><td><strong>Agrupación automática de destinos por zona</strong></td><td>Sin agrupación por zona.</td></tr>
     <tr><td><strong>Control de carga (kg) por camión y salida</strong></td><td>Sin control de carga por camión.</td></tr>
@@ -455,17 +458,19 @@ header.hero, body>header:not(.landing-header){position:relative}
   <p>TruckRoute busca resolver tres problemas medibles detectados en la entrevista (ver también el árbol de problemas, sección 2): el <strong>tiempo perdido</strong> armando rutas a mano, el <strong>combustible desperdiciado</strong> por rutas no optimizadas y las dobles pasadas por el mismo punto, y la <strong>falta de control de carga</strong> (kg) por camión y salida.</p>
 
   <h3 id="s3-2">3.2. Alcance</h3>
-  <p>El sistema <strong>incluye</strong>: importación y parseo automático de boletas en PDF, geocodificación de direcciones, agrupación de entregas por zona, cálculo de ruta óptima (Nearest Neighbor + distancia Haversine), generación de hoja de ruta digital, gestión del ciclo de vida del viaje (armar → confirmar → iniciar → finalizar), navegación GPS giro a giro para el repartidor, control de carga por camión, un panel de alertas y autenticación con roles diferenciados.</p>
+  <p>El sistema <strong>incluye</strong>: importación y parseo automático de boletas en PDF, geocodificación de direcciones, agrupación de entregas por zona, cálculo de ruta óptima (Google Routes API con optimización del orden de paradas), generación de hoja de ruta digital, gestión del ciclo de vida del viaje (armar → confirmar → iniciar → finalizar), navegación GPS giro a giro para el repartidor, control de carga por camión, un panel de alertas y autenticación con roles diferenciados.</p>
   <p>El sistema <strong>no incluye</strong> facturación ni gestión contable, gestión de stock o inventario, liquidación de sueldos, integración con sistemas de terceros ni soporte multiempresa en esta versión. El detalle completo está en las Limitaciones (dentro de 5.1) y se formaliza en el Contrato (sección 9).</p>
 
   <h3 id="s3-3">3.3. Personal Involucrado</h3>
-  <p class="lede">Roles del equipo de proyecto, confirmados contra el Gantt real (6.1): PM/DUX (Varela), D01 (Traverso), D02 (Crupi), D03 (García), BD (Silva).</p>
+  <p class="lede">Roles del equipo de proyecto, confirmados contra el Gantt real (6.1): PM/DUX (Varela), D01 (Traverso), D02 (Crupi), D03 (García), BD (Silva), más los encargados administrativos ADO01 (Gurschpon) y ADO02 (Rodríguez).</p>
   <div class="team">
     <div class="p"><div class="role">Project Manager + UX/UI</div><div class="name">Varela, Joaquín</div><p>Rol doble desde el inicio del proyecto (confirmado desde la tarea 1.1 del Gantt, 01/04/2026): gestión, GANTT, control de cambios y OKRs, junto con el diseño de interfaz del dashboard y la validación de HCI con Roberto y Tomás.</p></div>
-    <div class="p"><div class="role">Dev Backend</div><div class="name">Traverso, Lautaro</div><p>API REST propia en PHP: endpoints de boletas, viajes, configuración y alertas; lógica de estados del viaje.</p></div>
-    <div class="p"><div class="role">Dev Backend</div><div class="name">Crupi, Gino</div><p>API REST, algoritmos de ruteo (Nearest Neighbor + Haversine) e integración con las APIs de Google Cloud (Geocoding y Maps JavaScript).</p></div>
-    <div class="p"><div class="role">Especialista en BD</div><div class="name">Silva, Mateo</div><p>Modelo de datos (usuarios, repartidores, camiones, boletas, viajes, posiciones, alertas), consultas SQL y backups.</p></div>
-    <div class="p"><div class="role">Dev Frontend</div><div class="name">García, Facundo</div><p>Dashboard SPA en Vanilla JS, integración de Leaflet y validación de interfaz con el usuario.</p></div>
+    <div class="p"><div class="role">Dev Backend · D01</div><div class="name">Traverso, Lautaro</div><p>API REST propia en PHP: endpoints de boletas, viajes, configuración, tracking y alertas; lógica de estados del viaje e integración del servidor con las APIs de Google Cloud (Geocoding y Routes).</p></div>
+    <div class="p"><div class="role">Dev Frontend/Backend · D02</div><div class="name">Crupi, Gino</div><p>Módulos del panel, agrupación por zona, optimización de rutas con Google Routes API e integraciones externas.</p></div>
+    <div class="p"><div class="role">Especialista en BD</div><div class="name">Silva, Mateo</div><p>Modelo de datos (usuarios, repartidores, camiones, boletas, viajes, posiciones, alertas y puntos de finalización), migraciones, consultas SQL y backups.</p></div>
+    <div class="p"><div class="role">Dev Frontend · D03</div><div class="name">García, Facundo</div><p>Dashboard SPA en Vanilla JS, mapas interactivos con Google Maps JavaScript API y validación de interfaz con el usuario.</p></div>
+    <div class="p"><div class="role">Encargado Administrativo · ADO01</div><div class="name">Gurschpon</div><p>Documentación técnica, control de cambios y entregables del proyecto.</p></div>
+    <div class="p"><div class="role">Encargado Administrativo · ADO02</div><div class="name">Rodríguez</div><p>Gestión operativa y coordinación de entregas del equipo.</p></div>
     <div class="p"><div class="role">Cliente</div><div class="name">Roberto García</div><p>Dueño de Tres Reyes — Aceitunas y Encurtidos. Valida requerimientos, prioriza y firma el contrato.</p></div>
   </div>
 
@@ -475,13 +480,16 @@ header.hero, body>header:not(.landing-header){position:relative}
     <tr><td>MVP</td><td>Minimum Viable Product: versión mínima funcional del sistema, ya en producción para Tres Reyes.</td></tr>
     <tr><td>SPA</td><td>Single Page Application: el dashboard corre como una sola página (<code class="inline">index.html</code>) sin recargar el navegador.</td></tr>
     <tr><td>API REST</td><td>Interfaz HTTP propia (sin framework) que expone boletas, viajes, configuración y alertas al frontend.</td></tr>
-    <tr><td>Google Geocoding API</td><td>Servicio pago de Google Cloud (con cuota gratuita mensual) que convierte una dirección de texto en coordenadas. Reemplazó a Nominatim/OpenStreetMap en el sprint 5 (25–28/08/26).</td></tr>
-    <tr><td>Google Maps JavaScript API</td><td>Librería de Google Cloud que renderiza el mapa en vivo del panel admin (Tracking y Viajes). Reemplazó a Leaflet+OSRM para esas vistas.</td></tr>
+    <tr><td>Google Geocoding API</td><td>Servicio pago de Google Cloud (con cuota gratuita mensual) que convierte una dirección de texto en coordenadas. Reemplazó a Nominatim/OpenStreetMap y luego a LocationIQ en el sprint 5 (25–28/08/26).</td></tr>
+    <tr><td>Google Maps JavaScript API</td><td>Librería de Google Cloud que renderiza los tres mapas del sistema: Viajes pendientes, Tracking y el mapa del repartidor. Reemplazó a Leaflet+OSRM en todas las vistas.</td></tr>
+    <tr><td>Google Routes API</td><td>Servicio de Google Cloud que calcula la ruta y, con <code class="inline">optimizeWaypointOrder</code>, el orden óptimo de las paradas de cada viaje. Reemplazó al cálculo local con Nearest Neighbor + Haversine.</td></tr>
     <tr><td>Google Cloud Billing</td><td>Cuenta de facturación de Google Cloud, necesaria para habilitar las APIs de Geocoding y Maps aunque se use solo la cuota gratuita.</td></tr>
     <tr><td>API Key</td><td>Clave de acceso a las APIs de Google, restringida por dominio/IP para evitar uso indebido si se filtra en el frontend.</td></tr>
-    <tr><td>Nominatim / OSM</td><td>Servicio gratuito de geocodificación de OpenStreetMap usado en versiones iniciales del proyecto, reemplazado por Google Geocoding API.</td></tr>
+    <tr><td>Nominatim / OSM</td><td>Servicio gratuito de geocodificación de OpenStreetMap usado en versiones iniciales del proyecto, reemplazado primero por LocationIQ y después por Google Geocoding API.</td></tr>
+    <tr><td>LocationIQ</td><td>Servicio de geocodificación usado como paso intermedio entre Nominatim y Google Geocoding API.</td></tr>
+    <tr><td>Leaflet</td><td>Librería open-source de mapas usada en las versiones iniciales del panel y de la navegación del repartidor, reemplazada por Google Maps JavaScript API.</td></tr>
     <tr><td>OSRM</td><td>Open Source Routing Machine: motor de cálculo de rutas usado en versiones iniciales, reemplazado por las APIs de Google.</td></tr>
-    <tr><td>Nearest Neighbor</td><td>Algoritmo de optimización que ordena las paradas eligiendo siempre el destino más cercano no visitado.</td></tr>
+    <tr><td>Nearest Neighbor</td><td>Algoritmo de optimización que ordena las paradas eligiendo siempre el destino más cercano no visitado. Se usó en las primeras versiones del ruteo; hoy el orden lo calcula Google Routes API.</td></tr>
     <tr><td>Haversine</td><td>Fórmula matemática para calcular la distancia entre dos coordenadas geográficas.</td></tr>
     <tr><td>bcrypt</td><td>Algoritmo de hash usado para almacenar contraseñas sin guardarlas en texto plano.</td></tr>
     <tr><td>JWT</td><td>JSON Web Token: mecanismo de sesión seguro pendiente de implementar (ver roadmap crítico, 4.6).</td></tr>
@@ -509,7 +517,7 @@ header.hero, body>header:not(.landing-header){position:relative}
   <h2><span class="num">4</span>Descripción General</h2>
 
   <h3 id="s4-1">4.1. Perspectiva del producto</h3>
-  <p>TruckRoute es un <strong>sistema nuevo</strong>: hoy Tres Reyes no tiene ningún sistema digital de ruteo, todo se resuelve con Google Maps y WhatsApp. No reemplaza un software existente ni es parte de un sistema mayor, aunque sí se apoya en infraestructura ya disponible: las PCs y celulares del equipo de Tres Reyes (Roberto usa iPhone, Tomás un dispositivo Android simple) y en las APIs de Google Cloud (Geocoding y Maps JavaScript).</p>
+  <p>TruckRoute es un <strong>sistema nuevo</strong>: hoy Tres Reyes no tiene ningún sistema digital de ruteo, todo se resuelve con Google Maps y WhatsApp. No reemplaza un software existente ni es parte de un sistema mayor, aunque sí se apoya en infraestructura ya disponible: las PCs y celulares del equipo de Tres Reyes (Roberto usa iPhone, Tomás un dispositivo Android simple) y en las APIs de Google Cloud (Geocoding, Routes y Maps JavaScript).</p>
   <div class="flow">
     <div class="box">Boletas PDF</div><span class="arrow">→</span>
     <div class="box">Geocodificación (Google Geocoding API)</div><span class="arrow">→</span>
@@ -521,7 +529,7 @@ header.hero, body>header:not(.landing-header){position:relative}
   <ul>
     <li>Importar boletas en PDF y extraer automáticamente nombre, dirección y peso de cada una.</li>
     <li>Convertir cada dirección en coordenadas y agruparlas por zona geográfica.</li>
-    <li>Calcular el orden óptimo de paradas para minimizar la distancia recorrida.</li>
+    <li>Calcular el orden óptimo de paradas para minimizar la distancia recorrida (Google Routes API), agrupando en una sola parada las boletas del mismo cliente con la misma dirección.</li>
     <li>Generar la hoja de ruta digital de cada camión, sin armarla a mano.</li>
     <li>Mostrar el recorrido en un mapa, con navegación GPS en tiempo real para el repartidor.</li>
     <li>Al iniciar el viaje, tomar la ubicación actual del repartidor como punto de partida y abrir Google Maps directamente con la hoja de ruta completa cargada en el orden ya optimizado, lista para navegar.</li>
@@ -552,16 +560,16 @@ header.hero, body>header:not(.landing-header){position:relative}
   <h3 id="s4-4">4.4. Restricciones <span class="badge">Buenas Prácticas UTN p.57</span></h3>
 
   <h4>4.4.1. Políticas reguladoras</h4>
-  <p>El sistema se desarrolla mayormente con software libre y de código abierto: PHP, MySQL/MariaDB, Vanilla JS, Leaflet, PDF.js. La excepción es la capa de mapas y geocodificación, migrada a las <strong>APIs de Google Cloud</strong> (Geocoding API + Maps JavaScript API) en el sprint 5: son servicios pagos con cuota gratuita mensual, que requieren una cuenta de Google Cloud con facturación habilitada (aunque el uso se mantenga dentro de la cuota gratuita). El hosting actual (InfinityFree) es un plan gratuito. El repositorio de las presentaciones está publicado en GitHub Pages.</p>
+  <p>El sistema se desarrolla mayormente con software libre y de código abierto: PHP, MySQL/MariaDB, Vanilla JS, PDF.js. La excepción es la capa de mapas, geocodificación y ruteo, migrada a las <strong>APIs de Google Cloud</strong> (Geocoding API, Routes API y Maps JavaScript API) en el sprint 5: son servicios pagos con cuota gratuita mensual, que requieren una cuenta de Google Cloud con facturación habilitada (aunque el uso se mantenga dentro de la cuota gratuita). El hosting actual (InfinityFree) es un plan gratuito. El repositorio de las presentaciones está publicado en GitHub Pages.</p>
 
   <h4>4.4.2. Limitaciones de infraestructura</h4>
   <p>El backend corre sobre hosting compartido gratuito (InfinityFree, base de datos en <code class="inline">sql113.infinityfree.com</code>), sin servidor propio. No hay hardware dedicado: el sistema depende de los dispositivos que Tres Reyes ya tiene (PC administrativa, celular del repartidor).</p>
 
   <h4>4.4.3. Interfaces con otras aplicaciones</h4>
-  <p>El sistema se integra con la <strong>Google Geocoding API</strong> para geocodificar direcciones y con la <strong>Google Maps JavaScript API</strong> para el mapa en vivo del panel admin (Tracking y Viajes) y la navegación externa del repartidor. Usa la <strong>Geolocation API</strong> del navegador para obtener la posición GPS real. Reemplaza a WhatsApp como canal de coordinación (RF07, pendiente de sprint).</p>
+  <p>El sistema se integra con la <strong>Google Geocoding API</strong> para geocodificar direcciones, con la <strong>Google Routes API</strong> para optimizar el orden de las paradas, y con la <strong>Google Maps JavaScript API</strong> para los mapas del sistema (Viajes pendientes, Tracking y mapa del repartidor). La navegación giro a giro se delega a la app de Google Maps. Usa la <strong>Geolocation API</strong> del navegador para obtener la posición GPS real. Reemplaza a WhatsApp como canal de coordinación (RF07, pendiente de sprint).</p>
 
   <h4>4.4.4. Función de control</h4>
-  <p>Autenticación con usuario y contraseña (bcrypt) y roles diferenciados: administrador y repartidor. El repartidor no puede modificar rutas ni ver datos de otros camiones (RNF04).</p>
+  <p>Autenticación con email y contraseña (bcrypt) y roles diferenciados: administrador y repartidor. El repartidor no puede modificar rutas ni ver datos de otros camiones (RNF04).</p>
 
   <h4>4.4.5. Requisitos del lenguaje</h4>
   <p>Toda la interfaz está en <strong>español</strong>, con tipografía de al menos 18px por la dificultad visual de Roberto (RNF02), y un flujo de uso autoevidente pensado para un nivel tecnológico medio (RNF05: aprendizaje en menos de 20 minutos).</p>
@@ -577,11 +585,12 @@ header.hero, body>header:not(.landing-header){position:relative}
 
   <h4>4.4.9. Consideraciones de seguridad</h4>
   <p>Las contraseñas se almacenan con <strong>bcrypt</strong> (<code class="inline">password_hash</code>), nunca en texto plano. Hay pendientes críticos identificados por el propio equipo (ver 4.6): mover la contraseña de la base de datos a un archivo <code class="inline">.env</code>, reemplazar el <code class="inline">sessionStorage</code> por JWT o sesión segura, auditar el 100% de las consultas SQL con <code class="inline">bind_param</code>, y forzar HTTPS antes de producción real.</p>
+  <p>La recuperación de contraseña está limitada a la cuenta de administrador: el enlace se envía por correo (SMTP propio, <code class="inline">mailer.php</code> + <code class="inline">recuperar.php</code>) a una casilla fija del admin, sin exponer un campo de email a los demás usuarios.</p>
   <div class="callout info"><b>Resuelto — migración a 2 claves separadas (sprint 5):</b> se separaron las API Keys en dos: (1) clave de servidor (Geocoding + Routes API), restringida por tipo de API, sin restricción de dominio porque la usa PHP, nunca el navegador; (2) clave de navegador (Maps JavaScript API), restringida por dominio HTTP referrer al dominio de producción en la consola de Google Cloud. Con esta configuración, aunque alguien copie la clave del frontend, solo puede usarla desde el dominio autorizado.</div>
 
   <h3 id="s4-5">4.5. Suposiciones y dependencias</h3>
   <ul>
-    <li>Se asume que el consumo de las APIs de Google (Geocoding y Maps JavaScript) se mantiene dentro de la cuota gratuita mensual; si el volumen de boletas crece, esto pasa a ser un costo real a presupuestar (ver Oferta Económica, sección 7).</li>
+    <li>Se asume que el consumo de las APIs de Google (Geocoding, Routes y Maps JavaScript) se mantiene dentro de la cuota gratuita mensual; si el volumen de boletas crece, esto pasa a ser un costo real a presupuestar (ver Oferta Económica, sección 7).</li>
     <li>El proyecto depende de que InfinityFree mantenga activo el hosting gratuito de backend y base de datos.</li>
     <li>Se asume que los repartidores cuentan con datos móviles para usar la navegación GPS en tiempo real.</li>
     <li>Roberto García mostró intención de seguir usando el sistema al ver el prototipo funcional (KR3 del Objetivo 5), lo que sostiene la viabilidad comercial del proyecto.</li>
@@ -600,19 +609,26 @@ header.hero, body>header:not(.landing-header){position:relative}
   <ul>
     <li>RF07 — Notificación al repartidor (reemplazo de WhatsApp) por push o SMS.</li>
     <li>Caché de geocodificación, para no repetir direcciones ya resueltas.</li>
-    <li>RF10 — Reporte de eficiencia por ruta (km, tiempo real vs. estimado, combustible).</li>
+    <li>RF10 — Completar el reporte de eficiencia: comparar tiempo real vs. estimado y km reales recorridos (la pantalla Reportes ya muestra km estimados, combustible estimado y duración del viaje).</li>
   </ul>
   <div class="callout"><b>Ya implementado (confirmado por capturas del panel real):</b>
     <ul>
       <li><strong>RF06</strong> — Alerta de sobrecarga implementada: el panel bloquea la confirmación y muestra el porcentaje de carga vs. capacidad del camión.</li>
       <li><strong>RF08</strong> — Alerta de desvío de ruta: la pantalla de "Alertas" muestra los metros de desvío, el camión y el repartidor en tiempo real.</li>
-      <li><strong>RF09</strong> — Tracking en tiempo real: mapa con posición GPS en vivo de cada camión, paradas numeradas en el orden óptimo de la ruta y marcador del punto de finalización (si se eligió uno). Los marcadores desaparecen a medida que se marcan entregas.</li>
+      <li><strong>RF09</strong> — Tracking en tiempo real: mapa con pin fijo de la fábrica, posición GPS en vivo de cada camión, paradas numeradas en el orden óptimo de la ruta y marcador del punto de finalización (si se eligió uno). Los marcadores desaparecen a medida que se marcan entregas. Con varios repartidores en simultáneo, cada viaje usa un color propio en todos sus marcadores.</li>
+      <li><strong>RF10 (parcial)</strong> — Pantalla de Reportes con km estimados, consumo de combustible estimado (10 L/100 km) y duración de cada viaje.</li>
+      <li><strong>Mapas 100% Google</strong> — Viajes pendientes, Tracking y el mapa del repartidor usan Google Maps JavaScript API; el orden de paradas lo calcula Google Routes API.</li>
+      <li><strong>Agregar parada a viaje activo</strong> — el admin suma una boleta sin asignar a un viaje confirmado o en curso y la ruta se reoptimiza.</li>
+      <li><strong>Paradas del mismo cliente agrupadas</strong> — dos boletas del mismo cliente con la misma dirección cuentan como una sola parada (un solo waypoint).</li>
+      <li><strong>Boletas pospuestas</strong> — sección propia para apartar boletas de un viaje armado y reasignarlas después.</li>
       <li><strong>API Keys separadas y restringidas</strong> — clave de servidor (Geocoding + Routes, restringida por tipo de API) y clave de navegador (Maps JavaScript, restringida por dominio HTTP referrer). Ver 4.4.9.</li>
       <li><strong>Unificación de zonas</strong> — al confirmar 2 o más zonas con el mismo camión, el sistema las fusiona en un solo viaje optimizado con una sola ruta de punta a punta.</li>
       <li><strong>Repartidores en viaje</strong> — el perfil del repartidor se marca como "No disponible / En viaje" mientras tiene un viaje confirmado o en curso.</li>
       <li><strong>Puntos de finalización configurables</strong> — el admin puede cargar destinos de llegada (nombre, dirección, CP) en Configuración; las rutas se calculan desde la fábrica hasta el destino elegido por viaje.</li>
       <li><strong>Panel mobile del admin</strong> — menú hamburguesa con overlay para navegar todas las pantallas desde el celular.</li>
+      <li><strong>Sin código de seguridad al cliente</strong> — por pedido de Roberto (minuta 02), el sistema ya no envía el correo con código de seguridad al cliente que recibe la entrega.</li>
     </ul>
+    <p style="margin-top:10px;"><b>Nota:</b> RF08 y RF09 quedaron operativos en producción el 22/09/2026, al crear las tablas <code class="inline">posiciones</code> y <code class="inline">alertas_sistema</code> con <code class="inline">migracion_tracking.sql</code> (ver 5.6). Antes de esa fecha el código existía, pero las tablas no, y los errores se descartaban en silencio.</p>
   </div>
   <p><strong>Mejoras — iteraciones futuras:</strong></p>
   <ul>
@@ -642,11 +658,11 @@ header.hero, body>header:not(.landing-header){position:relative}
     <tr><td>RF03</td><td><strong>Vista de mapa con recorrido planificado y navegación externa a Google Maps.</strong> Paradas numeradas en orden óptimo sobre el mapa del panel; al presionar "Iniciar viaje", el sistema toma la ubicación GPS actual del repartidor como origen y abre la app de Google Maps con el destino y todas las paradas intermedias ya cargadas en el orden óptimo.</td><td><span class="badge alta">Alta</span></td><td>"Pasamos dos veces por el mismo lugar"</td></tr>
     <tr><td>RF04</td><td><strong>Agrupación automática de destinos por zona.</strong> Elimina el backtracking al identificar zonas geográficas.</td><td><span class="badge alta">Alta</span></td><td>"Usamos más combustible del necesario"</td></tr>
     <tr><td>RF05</td><td><strong>Control de carga (kg) por camión y salida.</strong> Registra los kilos de mercadería asignados a cada camión por viaje.</td><td><span class="badge media">Media</span></td><td>"No sé cuántos kilos lleva cada camión"</td></tr>
-    <tr><td>RF06</td><td><strong>Alerta de sobrecarga o subutilización.</strong> Notifica cuando un camión supera su capacidad o queda muy por debajo del óptimo.</td><td><span class="badge media">Media</span></td><td>Extensión de RF05, sprint siguiente</td></tr>
+    <tr><td>RF06</td><td><strong>Alerta de sobrecarga o subutilización.</strong> Notifica cuando un camión supera su capacidad o queda muy por debajo del óptimo.</td><td><span class="badge media">Media</span> <span class="badge" style="color:var(--green);border-color:var(--green)">Implementado</span></td><td>Extensión de RF05</td></tr>
     <tr><td>RF07</td><td><strong>Notificación de ruta al repartidor.</strong> Envío de la hoja de ruta al dispositivo del repartidor, reemplazando el WhatsApp actual.</td><td><span class="badge alta">Alta</span></td><td>"Es precario, quieren automatizarlo"</td></tr>
-    <tr><td>RF08</td><td><strong>Alerta de desvío de ruta.</strong> Avisa a Roberto cuando un repartidor no sigue la ruta optimizada prevista (implementada: muestra los metros de desvío, el camión y el repartidor).</td><td><span class="badge alta">Alta</span> <span class="badge" style="color:var(--green);border-color:var(--green)">Implementado</span></td><td>Control de gestión, sprint siguiente</td></tr>
-    <tr><td>RF09</td><td><strong>Tracking en tiempo real de camiones.</strong> Panel con la ubicación en vivo de todos los camiones activos.</td><td><span class="badge media">Media</span></td><td>Mejora futura</td></tr>
-    <tr><td>RF10</td><td><strong>Reporte de eficiencia por ruta.</strong> Historial de km recorridos, tiempo real vs. estimado y estimación de combustible.</td><td><span class="badge baja">Baja</span></td><td>Mejora futura</td></tr>
+    <tr><td>RF08</td><td><strong>Alerta de desvío de ruta.</strong> Avisa a Roberto cuando un repartidor no sigue la ruta optimizada prevista (implementada: muestra los metros de desvío, el camión y el repartidor).</td><td><span class="badge alta">Alta</span> <span class="badge" style="color:var(--green);border-color:var(--green)">Implementado</span></td><td>Control de gestión</td></tr>
+    <tr><td>RF09</td><td><strong>Tracking en tiempo real de camiones.</strong> Panel con la ubicación en vivo de todos los camiones activos, sus paradas pendientes y el punto de finalización.</td><td><span class="badge media">Media</span> <span class="badge" style="color:var(--green);border-color:var(--green)">Implementado</span></td><td>Visibilidad de la operación (OKR 3)</td></tr>
+    <tr><td>RF10</td><td><strong>Reporte de eficiencia por ruta.</strong> Historial de km recorridos, tiempo real vs. estimado y estimación de combustible (hoy: km estimados, combustible y duración; falta la comparación real vs. estimado).</td><td><span class="badge baja">Baja</span> <span class="badge" style="color:var(--amber);border-color:var(--amber)">Parcial</span></td><td>Medición de OKRs</td></tr>
   </table>
 
   <h4>Requerimientos no funcionales (RNF)</h4>
@@ -657,7 +673,7 @@ header.hero, body>header:not(.landing-header){position:relative}
     <tr><td>RNF03</td><td>Offline parcial: el repartidor consulta su hoja de ruta sin conexión una vez descargada.</td><td>Conectividad</td></tr>
     <tr><td>RNF04</td><td>Aislamiento de permisos por perfil: el repartidor no modifica rutas ni ve otros camiones.</td><td>Seguridad</td></tr>
     <tr><td>RNF05</td><td>Tiempo de aprendizaje ≤ 20 minutos para repartidores. Flujo autoevidente, sin manual.</td><td>Usabilidad</td></tr>
-    <tr><td>RNF06</td><td>Integración con Google Maps Platform (Geocoding API + Maps JavaScript API) para cálculo y visualización sobre mapa real de Argentina.</td><td>Plataforma</td></tr>
+    <tr><td>RNF06</td><td>Integración con Google Maps Platform (Geocoding API, Routes API y Maps JavaScript API) para cálculo y visualización sobre mapa real de Argentina.</td><td>Plataforma</td></tr>
   </table>
 
   <h4>Limitaciones del alcance</h4>
@@ -697,40 +713,41 @@ header.hero, body>header:not(.landing-header){position:relative}
   <h3 id="s5-4">5.4. Interfaces de software <span class="badge">Buenas Prácticas UTN p.59</span></h3>
   <table>
     <tr><th>ID</th><th>Componente</th><th>Tecnología / Stack</th><th>Rol en el sistema</th></tr>
-    <tr><td>ISW01</td><td><strong>Backend / API REST</strong></td><td>PHP 8 sin framework. Endpoints: boletas, viajes, config, alertas, login. CORS habilitado.</td><td>Lógica de negocio: ruteo (Nearest Neighbor + Haversine), estados del viaje.</td></tr>
-    <tr><td>ISW02</td><td><strong>Base de datos</strong></td><td>MySQL / MariaDB en InfinityFree (<code class="inline">sql113.infinityfree.com</code>). Charset UTF-8 MB4.</td><td>Persistencia central. 7 tablas: usuarios, repartidores, camiones, boletas, viajes, posiciones, alertas_sistema.</td></tr>
+    <tr><td>ISW01</td><td><strong>Backend / API REST</strong></td><td>PHP 8 sin framework. Endpoints: boletas, viajes, config, alertas, login. CORS habilitado.</td><td>Lógica de negocio: agrupación por zona, llamada a Google Routes API para el orden de paradas, estados del viaje, tracking y alertas.</td></tr>
+    <tr><td>ISW02</td><td><strong>Base de datos</strong></td><td>MySQL / MariaDB en InfinityFree (<code class="inline">sql113.infinityfree.com</code>). Charset UTF-8 MB4.</td><td>Persistencia central. 8 tablas: usuarios, repartidores, camiones, boletas, viajes, posiciones, alertas_sistema y puntos_finalizacion.</td></tr>
     <tr><td>ISW03</td><td><strong>Dashboard (Frontend)</strong></td><td>Vanilla JS — SPA sin framework, un solo <code class="inline">index.html</code>. HTML5 + CSS3 responsive. Google Fonts Inter + DM Sans.</td><td>Capa de presentación: estado en tiempo real, historial, alertas y configuración.</td></tr>
-    <tr><td>ISW04</td><td><strong>Mapas y ruteo</strong></td><td>Google Maps JavaScript API para la visualización de rutas, paradas y tracking en el panel admin (migrado desde Leaflet + OSRM, sprint 5). Handoff a la app de Google Maps (Directions URL con <code class="inline">origin</code> = geolocalización GPS del repartidor y <code class="inline">waypoints</code> en el orden óptimo calculado por Google Routes API) para la navegación giro a giro.</td><td>Visualización en tiempo real del recorrido, paradas numeradas y ubicación GPS de cada camión en el panel. Navegación GPS real delegada a la app de Google Maps al iniciar el viaje.</td></tr>
+    <tr><td>ISW04</td><td><strong>Mapas y ruteo</strong></td><td>Google Maps JavaScript API para la visualización de rutas, paradas y tracking en los tres mapas del sistema: Viajes pendientes, Tracking y mapa del repartidor (migrado desde Leaflet + OSRM). Handoff a la app de Google Maps (Directions URL con <code class="inline">origin</code> = geolocalización GPS del repartidor y <code class="inline">waypoints</code> en el orden óptimo calculado por Google Routes API) para la navegación giro a giro.</td><td>Visualización en tiempo real del recorrido, paradas numeradas y ubicación GPS de cada camión (un color por viaje). Navegación GPS real delegada a la app de Google Maps al iniciar el viaje.</td></tr>
     <tr><td>ISW04b</td><td><strong>Optimización de rutas</strong></td><td>Google Routes API (<code class="inline">computeRoutes</code> con <code class="inline">optimizeWaypointOrder: true</code>). Clave de servidor, restringida por tipo de API.</td><td>Calcula el orden óptimo de las paradas al confirmar el viaje. Fábrica como origen; punto de finalización elegido (o última entrega si no se eligió ninguno) como destino.</td></tr>
     <tr><td>ISW05</td><td><strong>Parseo de boletas</strong></td><td>PDF.js 3.11, ejecutado en el cliente.</td><td>Extrae automáticamente nombre, dirección y peso de cada boleta cargada.</td></tr>
-    <tr><td>ISW06</td><td><strong>Geocodificación y mapas</strong></td><td>Google Geocoding API + Google Maps JavaScript API (migrado desde Nominatim/OSM + OSRM, sprint 5, 25–28/08/26).</td><td>Convierte direcciones en coordenadas y renderiza el mapa en vivo del panel admin (Tracking y Viajes).</td></tr>
-    <tr><td>ISW07</td><td><strong>Autenticación</strong></td><td>bcrypt (<code class="inline">password_hash</code>).</td><td>Login y control de acceso por rol (admin / repartidor). JWT pendiente (ver 4.6).</td></tr>
+    <tr><td>ISW06</td><td><strong>Geocodificación y mapas</strong></td><td>Google Geocoding API + Google Maps JavaScript API (migrado desde Nominatim/OSM, luego LocationIQ, y Leaflet + OSRM; sprint 5, 25–28/08/26).</td><td>Convierte direcciones en coordenadas (servidor) y renderiza los mapas del sistema.</td></tr>
+    <tr><td>ISW07</td><td><strong>Autenticación</strong></td><td>bcrypt (<code class="inline">password_hash</code>).</td><td>Login con email y contraseña, control de acceso por rol (admin / repartidor) y recuperación de contraseña del admin por correo. JWT pendiente (ver 4.6).</td></tr>
   </table>
 
   <h3 id="s5-5">5.5. Interfaces de comunicación <span class="badge">Buenas Prácticas UTN p.59</span></h3>
   <table>
     <tr><th>Interfaz</th><th>Protocolo / Formato</th><th>Detalle</th></tr>
     <tr><td><strong>Dashboard → Backend</strong></td><td>HTTP / REST (JSON)</td><td>Endpoints para boletas, viajes, configuración, alertas y login.</td></tr>
-    <tr><td><strong>Backend → Google Geocoding API</strong></td><td>HTTPS + API Key</td><td>Geocodificación de direcciones de las boletas.</td></tr>
-    <tr><td><strong>Dashboard → Google Maps JavaScript API</strong></td><td>HTTPS + API Key</td><td>Renderizado del mapa en vivo (Tracking, Viajes) y armado del link de navegación externa.</td></tr>
+    <tr><td><strong>Backend → Google Geocoding API</strong></td><td>HTTPS + API Key</td><td>Geocodificación de direcciones de las boletas y de los puntos de finalización.</td></tr>
+    <tr><td><strong>Backend → Google Routes API</strong></td><td>HTTPS + API Key (servidor)</td><td>Optimización del orden de paradas al confirmar un viaje o agregar una parada.</td></tr>
+    <tr><td><strong>Dashboard → Google Maps JavaScript API</strong></td><td>HTTPS + API Key</td><td>Renderizado de los mapas (Viajes pendientes, Tracking y mapa del repartidor) y armado del link de navegación externa.</td></tr>
     <tr><td><strong>Repartidor → App Google Maps</strong></td><td>Intent / URL Scheme</td><td>Al "Iniciar viaje", el navegador redirige a la app de Google Maps con origen (GPS actual), destino y waypoints ya cargados.</td></tr>
     <tr><td><strong>Backend → Base de datos</strong></td><td>TCP / SQL</td><td>Conexión a MySQL/MariaDB en InfinityFree.</td></tr>
-    <tr><td><strong>Navegador (repartidor) → Geolocation API</strong></td><td>API del navegador</td><td>Obtiene la posición GPS real del repartidor para la navegación en vivo.</td></tr>
+    <tr><td><strong>Navegador (repartidor) → Geolocation API</strong></td><td>API del navegador</td><td>Obtiene la posición GPS real del repartidor, que se envía periódicamente a <code class="inline">tracking.php</code> para el mapa de Tracking y la detección de desvíos.</td></tr>
   </table>
 
   <h3 id="s5-6">5.6. Modelo Entidad-Relación de la base de datos</h3>
-  <p>Modelo reconstruido a partir de las 7 tablas ya existentes en la base de datos (<code class="inline">if0_42217493_base_datos</code>, InfinityFree): <strong>usuarios</strong>, <strong>repartidores</strong>, <strong>camiones</strong>, <strong>boletas</strong>, <strong>viajes</strong>, <strong>posiciones</strong> y <strong>alertas_sistema</strong>.</p>
-  <div class="callout info"><b>Modelo validado en producción (agosto 2026):</b> las tablas y columnas de abajo reflejan el esquema real en uso en InfinityFree (<code class="inline">if0_42217493_base_datos</code>), incluyendo las migraciones aplicadas durante el desarrollo: <code class="inline">migracion_zonas.sql</code>, <code class="inline">migracion_geo_aproximada.sql</code>, <code class="inline">migracion_dia_hora.sql</code>, <code class="inline">migracion_cp.sql</code>, <code class="inline">migracion_pospuesta.sql</code> y <code class="inline">migracion_destinos.sql</code>.</div>
+  <p>Modelo reconstruido a partir de las 8 tablas existentes en la base de datos (<code class="inline">if0_42217493_base_datos</code>, InfinityFree): <strong>usuarios</strong>, <strong>repartidores</strong>, <strong>camiones</strong>, <strong>boletas</strong>, <strong>viajes</strong>, <strong>posiciones</strong>, <strong>alertas_sistema</strong> y <strong>puntos_finalizacion</strong>.</p>
+  <div class="callout info"><b>Modelo validado en producción (septiembre 2026):</b> las tablas y columnas de abajo reflejan el esquema real en uso en InfinityFree (<code class="inline">if0_42217493_base_datos</code>), incluyendo las migraciones aplicadas durante el desarrollo: <code class="inline">migracion_zonas.sql</code>, <code class="inline">migracion_geo_aproximada.sql</code>, <code class="inline">migracion_dia_hora.sql</code>, <code class="inline">migracion_cp.sql</code>, <code class="inline">migracion_pospuesta.sql</code>, <code class="inline">migracion_destinos.sql</code> y <code class="inline">migracion_tracking.sql</code> (22/09/2026, crea <code class="inline">posiciones</code> y <code class="inline">alertas_sistema</code>, que el código de tracking ya usaba pero nunca se habían creado).</div>
 
   <div class="er-wrap">
-    <div class="er-box core"><div class="head">USUARIOS</div><ul><li class="pk">id · PK</li><li>nombre</li><li>usuario (único)</li><li>email</li><li>password_hash</li><li>rol (admin/repartidor)</li></ul></div>
+    <div class="er-box core"><div class="head">USUARIOS</div><ul><li class="pk">id · PK</li><li>nombre</li><li>usuario (único)</li><li>email (login)</li><li>password_hash</li><li>rol (admin/repartidor)</li></ul></div>
     <div class="er-box core"><div class="head">REPARTIDORES</div><ul><li class="pk">id · PK</li><li class="fk">usuario_id · FK → USUARIOS</li><li class="fk">camion_id · FK → CAMIONES</li></ul></div>
     <div class="er-box core"><div class="head">CAMIONES</div><ul><li class="pk">id · PK</li><li>patente (único)</li><li>capacidad_kg</li><li>marca, modelo</li><li>estado (disponible/en_viaje/mantenimiento)</li></ul></div>
-    <div class="er-box core"><div class="head">VIAJES</div><ul><li class="pk">id · PK</li><li class="fk">camion_id · FK</li><li class="fk">repartidor_id · FK</li><li class="fk">destino_id · FK → PUNTOS_FIN.</li><li>zona, estado, fecha</li><li>peso_total, orden_paradas (JSON)</li><li>dia_salida, started_at, finished_at</li></ul></div>
+    <div class="er-box core"><div class="head">VIAJES</div><ul><li class="pk">id · PK</li><li class="fk">camion_id · FK (nullable)</li><li class="fk">repartidor_id · FK</li><li class="fk">destino_id · FK → PUNTOS_FIN. (nullable)</li><li>zona, fecha</li><li>estado (armado/confirmado/en_curso/finalizado)</li><li>peso_total, orden_paradas (JSON)</li><li>dia_salida, started_at, finished_at</li></ul></div>
     <div class="er-box vol"><div class="head">BOLETAS</div><ul><li class="pk">id · PK</li><li class="fk">viaje_id · FK (nullable)</li><li>cliente, direccion</li><li>lat, lon, cp, barrio, zona</li><li>peso_kg, geo_aproximada</li><li>estado (pendiente/asignada/entregada/pospuesta)</li><li>fecha_carga, entregada_at</li></ul></div>
-    <div class="er-box vol"><div class="head">POSICIONES</div><ul><li class="pk">id · PK</li><li class="fk">viaje_id · FK</li><li>lat, lon, accuracy</li><li>timestamp</li></ul></div>
-    <div class="er-box aux"><div class="head">ALERTAS_SISTEMA</div><ul><li class="pk">id · PK</li><li class="fk">viaje_id · FK</li><li>tipo (sobrecarga/desvio/cierre…)</li><li>mensaje, estado</li><li>timestamp</li></ul></div>
-    <div class="er-box aux"><div class="head">PUNTOS_FINALIZACIÓN</div><ul><li class="pk">id · PK</li><li>nombre</li><li>calle, altura, localidad</li><li>provincia, cp</li><li>lat, lon</li></ul></div>
+    <div class="er-box vol"><div class="head">POSICIONES</div><ul><li class="pk">id · PK</li><li class="fk">viaje_id · FK</li><li class="fk">repartidor_id · FK</li><li>lat, lon, accuracy</li><li>timestamp</li></ul></div>
+    <div class="er-box aux"><div class="head">ALERTAS_SISTEMA</div><ul><li class="pk">id · PK</li><li class="fk">viaje_id · FK (nullable)</li><li class="fk">repartidor_id · FK (nullable)</li><li>tipo (desvio/finalizacion/sobrecarga/subutilizacion)</li><li>mensaje, leida</li><li>timestamp</li></ul></div>
+    <div class="er-box aux"><div class="head">PUNTOS_FINALIZACIÓN</div><ul><li class="pk">id · PK</li><li>nombre</li><li>calle, altura, localidad</li><li>provincia, cp</li><li>lat, lon, created_at</li></ul></div>
   </div>
   <div class="legend">
     <span><span class="dot" style="background:var(--green)"></span>Entidades core (usuarios, flota, viajes)</span>
@@ -746,80 +763,112 @@ header.hero, body>header:not(.landing-header){position:relative}
     <tr><td>REPARTIDORES</td><td>1 : N</td><td>VIAJES</td><td>Un repartidor conduce muchos viajes.</td></tr>
     <tr><td>VIAJES</td><td>1 : N</td><td>BOLETAS</td><td>Un viaje agrupa varias boletas (paradas) ya ordenadas.</td></tr>
     <tr><td>VIAJES</td><td>1 : N</td><td>POSICIONES</td><td>Un viaje en curso genera muchos registros de posición GPS.</td></tr>
-    <tr><td>VIAJES</td><td>1 : N</td><td>ALERTAS_SISTEMA</td><td>Un viaje puede disparar varias alertas (sobrecarga, desvío, cierre).</td></tr>
+    <tr><td>VIAJES</td><td>1 : N</td><td>ALERTAS_SISTEMA</td><td>Un viaje puede disparar varias alertas (sobrecarga, subutilización, desvío, finalización).</td></tr>
+    <tr><td>PUNTOS_FINALIZACIÓN</td><td>1 : N</td><td>VIAJES</td><td>Un punto de finalización puede ser el destino de muchos viajes; si el viaje no tiene uno, termina en la última entrega.</td></tr>
   </table>
 
   <h4>Esquema relacional (MySQL / MariaDB)</h4>
+  <p class="lede">Esquema alineado con el diagrama de arriba: tablas base más las columnas agregadas por las migraciones. Las tablas <code class="inline">posiciones</code>, <code class="inline">alertas_sistema</code> y <code class="inline">puntos_finalizacion</code> se transcriben tal cual de sus migraciones; en ellas las relaciones con <code class="inline">viajes</code> son lógicas (índices, sin restricción FK).</p>
   <pre>CREATE TABLE usuarios (
-  id_usuario     INT AUTO_INCREMENT PRIMARY KEY,
+  id             INT AUTO_INCREMENT PRIMARY KEY,
   nombre         VARCHAR(80)  NOT NULL,
   usuario        VARCHAR(50)  NOT NULL UNIQUE,
+  email          VARCHAR(120),              -- se usa para el login
   password_hash  VARCHAR(255) NOT NULL,
-  rol            ENUM('admin','repartidor') NOT NULL DEFAULT 'repartidor',
-  activo         TINYINT(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE repartidores (
-  id_repartidor  INT AUTO_INCREMENT PRIMARY KEY,
-  id_usuario     INT UNIQUE,
-  nombre         VARCHAR(80) NOT NULL,
-  telefono       VARCHAR(20),
-  estado         ENUM('activo','inactivo') NOT NULL DEFAULT 'activo',
-  FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+  rol            ENUM('admin','repartidor') NOT NULL DEFAULT 'repartidor'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE camiones (
-  id_camion      INT AUTO_INCREMENT PRIMARY KEY,
-  patente        VARCHAR(10) NOT NULL UNIQUE,
+  id             INT AUTO_INCREMENT PRIMARY KEY,
+  patente        VARCHAR(10)  NOT NULL UNIQUE,
   capacidad_kg   DECIMAL(8,2) NOT NULL,
-  estado         ENUM('disponible','en_ruta','fuera_de_servicio') NOT NULL DEFAULT 'disponible'
+  marca          VARCHAR(50),
+  modelo         VARCHAR(50),
+  estado         ENUM('disponible','en_viaje','mantenimiento') NOT NULL DEFAULT 'disponible'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE repartidores (
+  id             INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id     INT UNIQUE,
+  camion_id      INT NULL,
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+  FOREIGN KEY (camion_id)  REFERENCES camiones(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- migracion_destinos.sql
+CREATE TABLE IF NOT EXISTS puntos_finalizacion (
+  id             INT AUTO_INCREMENT PRIMARY KEY,
+  nombre         VARCHAR(100) NOT NULL,
+  calle          VARCHAR(150) NOT NULL,
+  altura         VARCHAR(20)  NOT NULL,
+  localidad      VARCHAR(100) NOT NULL,
+  provincia      VARCHAR(100) NOT NULL,
+  cp             VARCHAR(15)  NULL,
+  lat            DECIMAL(10,7) NULL,
+  lon            DECIMAL(10,7) NULL,
+  created_at     DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE viajes (
-  id_viaje       INT AUTO_INCREMENT PRIMARY KEY,
-  id_camion      INT NOT NULL,
-  id_repartidor  INT NOT NULL,
-  fecha          DATE NOT NULL,
+  id             INT AUTO_INCREMENT PRIMARY KEY,
+  camion_id      INT NULL,                  -- nullable desde migracion_zonas.sql
+  repartidor_id  INT,
+  destino_id     INT NULL,                  -- migracion_destinos.sql
   zona           VARCHAR(60),
-  estado         ENUM('armado','confirmado','iniciado','finalizado') NOT NULL DEFAULT 'armado',
-  distancia_km   DECIMAL(6,2),
-  hora_inicio    DATETIME,
-  hora_fin       DATETIME,
-  FOREIGN KEY (id_camion) REFERENCES camiones(id_camion),
-  FOREIGN KEY (id_repartidor) REFERENCES repartidores(id_repartidor)
+  estado         VARCHAR(20) NOT NULL DEFAULT 'armado',  -- armado / confirmado / en_curso / finalizado
+  fecha          DATE NOT NULL,
+  peso_total     DECIMAL(8,2),
+  orden_paradas  JSON,
+  dia_salida     DATE,                      -- migracion_dia_hora.sql
+  started_at     DATETIME,
+  finished_at    DATETIME,
+  FOREIGN KEY (camion_id)     REFERENCES camiones(id),
+  FOREIGN KEY (repartidor_id) REFERENCES repartidores(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE boletas (
-  id_boleta      INT AUTO_INCREMENT PRIMARY KEY,
-  id_viaje       INT,
+  id             INT AUTO_INCREMENT PRIMARY KEY,
+  viaje_id       INT NULL,
   cliente        VARCHAR(120),
   direccion      VARCHAR(160) NOT NULL,
-  latitud        DECIMAL(10,7),
-  longitud       DECIMAL(10,7),
+  lat            DECIMAL(10,7),
+  lon            DECIMAL(10,7),
+  cp             VARCHAR(15),               -- migracion_cp.sql
+  barrio         VARCHAR(80),
+  zona           VARCHAR(60),               -- migracion_zonas.sql
   peso_kg        DECIMAL(8,2) NOT NULL,
-  orden_parada   INT,
-  fecha          DATE NOT NULL,
-  FOREIGN KEY (id_viaje) REFERENCES viajes(id_viaje)
+  geo_aproximada TINYINT(1) DEFAULT 0,      -- migracion_geo_aproximada.sql
+  estado         VARCHAR(20) NOT NULL DEFAULT 'pendiente',  -- pendiente / asignada / entregada / pospuesta
+  fecha_carga    DATETIME DEFAULT CURRENT_TIMESTAMP,
+  entregada_at   DATETIME,                  -- migracion_dia_hora.sql
+  FOREIGN KEY (viaje_id) REFERENCES viajes(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE posiciones (
-  id_posicion    INT AUTO_INCREMENT PRIMARY KEY,
-  id_viaje       INT NOT NULL,
-  latitud        DECIMAL(10,7) NOT NULL,
-  longitud       DECIMAL(10,7) NOT NULL,
-  timestamp      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (id_viaje) REFERENCES viajes(id_viaje)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- migracion_tracking.sql (22/09/2026)
+CREATE TABLE IF NOT EXISTS posiciones (
+  id             INT AUTO_INCREMENT PRIMARY KEY,
+  viaje_id       INT NOT NULL,
+  repartidor_id  INT NOT NULL,
+  lat            DECIMAL(10,7) NOT NULL,
+  lon            DECIMAL(10,7) NOT NULL,
+  accuracy       FLOAT DEFAULT 0,
+  timestamp      DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_viaje_id  (viaje_id),
+  INDEX idx_timestamp (timestamp)
+);
 
-CREATE TABLE alertas_sistema (
-  id_alerta      INT AUTO_INCREMENT PRIMARY KEY,
-  id_viaje       INT,
-  tipo           ENUM('sobrecarga','subutilizacion','desvio_ruta','cierre') NOT NULL,
-  mensaje        VARCHAR(160),
-  estado         ENUM('activa','resuelta') NOT NULL DEFAULT 'activa',
-  timestamp      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (id_viaje) REFERENCES viajes(id_viaje)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;</pre>
+CREATE TABLE IF NOT EXISTS alertas_sistema (
+  id             INT AUTO_INCREMENT PRIMARY KEY,
+  tipo           VARCHAR(30)  NOT NULL,     -- desvio / finalizacion / sobrecarga / subutilizacion
+  viaje_id       INT          NULL,
+  repartidor_id  INT          NULL,
+  mensaje        VARCHAR(500) NOT NULL,
+  leida          TINYINT(1)   NOT NULL DEFAULT 0,
+  timestamp      DATETIME     DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_viaje_id  (viaje_id),
+  INDEX idx_leida     (leida),
+  INDEX idx_timestamp (timestamp)
+);</pre>
   <h3 id="s5-7">5.7. Diagrama de flujo del proceso principal</h3>
   <p>Flujo de extremo a extremo del sistema: desde que Roberto carga las boletas del día hasta que el repartidor finaliza su turno y los datos quedan asentados.</p>
   <div style="overflow-x:auto;margin:16px 0;">
@@ -850,7 +899,7 @@ CREATE TABLE alertas_sistema (
     <!-- ── NODE 3: Agrupar por zona ── -->
     <rect x="286" y="116" width="270" height="40" rx="6" fill="#161f19" stroke="#5ab4e8" stroke-width="1.5"/>
     <text x="421" y="131" text-anchor="middle" fill="#5ab4e8" font-weight="600">3. Agrupación por zona</text>
-    <text x="421" y="146" text-anchor="middle" fill="#96ab9f">Nearest Neighbor + Haversine</text>
+    <text x="421" y="146" text-anchor="middle" fill="#96ab9f">Por zona de la boleta (Geocoding + CP)</text>
     <!-- ── ARROW 3→4 (left to admin) ── -->
     <line x1="286" y1="136" x2="220" y2="136" stroke="#3ddc84" stroke-width="1.5" marker-end="url(#arr)"/>
     <!-- ── NODE 4: Elegir camión/repartidor ── -->
@@ -978,8 +1027,8 @@ CREATE TABLE alertas_sistema (
       <img src="https://raw.githubusercontent.com/varelajoaquin2007-rgb/Landing-Page-Tres-Reyes/main/traverso.jfif" alt="Traverso" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;">
       <div style="padding:14px 16px;">
         <div class="name">Traverso</div>
-        <div class="role">Desarrollador 01 — Frontend/Backend</div>
-        <p>Servidor PHP, algoritmos de ruteo, integración con APIs de Google Cloud.</p>
+        <div class="role">Desarrollador 01 — Backend</div>
+        <p>Servidor PHP, endpoints de la API e integración del servidor con las APIs de Google Cloud.</p>
       </div>
     </div>
 
@@ -997,7 +1046,7 @@ CREATE TABLE alertas_sistema (
       <div style="padding:14px 16px;">
         <div class="name">García</div>
         <div class="role">Desarrollador 03 — Frontend</div>
-        <p>Dashboard SPA, mapas interactivos y validación de interfaz con el usuario.</p>
+        <p>Dashboard SPA, mapas interactivos con Google Maps y validación de interfaz con el usuario.</p>
       </div>
     </div>
 
@@ -1032,7 +1081,7 @@ CREATE TABLE alertas_sistema (
 
 <section id="s7">
   <h2><span class="num">7</span>Oferta Económica</h2>
-  <div class="callout todo"><b>En elaboración por el equipo.</b> Aún no está cerrada. El Gantt (6.1) ya trae la columna "Cantidad de trabajo en horas" por tarea, que puede usarse como base para calcular las horas-hombre por rol una vez que se defina un costo/hora. Hoy el proyecto no tiene costos de licencia (stack 100% open-source) ni de hosting (plan gratuito de InfinityFree); a estimar: costo de las APIs de Google (Geocoding y Maps JavaScript, con cuota gratuita mensual) y un eventual servicio de SMS/push para RF07.</div>
+  <div class="callout todo"><b>En elaboración por el equipo.</b> Aún no está cerrada. El Gantt (6.1) ya trae la columna "Cantidad de trabajo en horas" por tarea, que puede usarse como base para calcular las horas-hombre por rol una vez que se defina un costo/hora. Hoy el proyecto no tiene costos de licencia del stack propio (PHP, MySQL, Vanilla JS y PDF.js son open-source) ni de hosting (plan gratuito de InfinityFree). La excepción son las APIs de Google (Geocoding, Routes y Maps JavaScript): son servicios pagos que hoy se usan dentro de la cuota gratuita mensual, pero requieren facturación habilitada y deben estimarse si crece el volumen (ver 4.4.1). También queda a estimar un eventual servicio de SMS/push para RF07.</div>
 </section>
 
 <section id="s8">
@@ -1064,7 +1113,7 @@ CREATE TABLE alertas_sistema (
   <p>Se entrega lo definido en 3.2 y 5 (RF01 a RF10, según prioridad). Queda fuera lo listado en las Limitaciones (5.1): facturación, stock, liquidación de sueldos, integración con terceros, CRM avanzado y soporte multiempresa.</p>
 
   <h4>9.4. Plazos</h4>
-  <p>Fechas clave según el cronograma (6.1): a completar una vez ajustadas las fechas en el Google Sheets del proyecto.</p>
+  <p>Fechas clave según el cronograma (6.1): inicio del proyecto el 01/04/2026; cierre de E01 y primera presentación el 04/05/2026; cierre de E02 y segunda presentación el 06/07/2026; cierre de E03 el 31/07/2026; tercera presentación el 25/09/2026; fin previsto del proyecto el 17/10/2026 (148 días).</p>
 
   <h4>9.5. Responsabilidades</h4>
   <p>El equipo: desarrollo, endurecimiento de seguridad, puesta en marcha y documentación. El cliente: validar requerimientos y prototipo, y proveer acceso a las boletas y a la operación diaria para las pruebas.</p>
@@ -1091,8 +1140,8 @@ CREATE TABLE alertas_sistema (
     <tr><td>20/04/2026</td><td>Roberto García</td><td><strong>Entrevista 1.</strong> Identificación del problema real y relevamiento de la línea de base (dobles pasadas, combustible, control de carga).</td><td>Presencial</td></tr>
     <tr><td>27/04/2026</td><td>Roberto García, Facundo y Tomás</td><td><strong>Entrevista 2.</strong> Perfiles de usuario y confirmación de síntomas (formulario v2, escala Likert 1–5).</td><td>Presencial</td></tr>
     <tr><td>20/05/2026</td><td>Roberto García</td><td><strong>Validación del mock-up (E02).</strong> Feedback sobre el primer mock-up antes de empezar a programar con base de datos.</td><td>Presencial</td></tr>
-    <tr><td>09/06/2026</td><td>Roberto García</td><td><strong>Tercera entrevista.</strong> Ajustes finales previos a la carga de boletas reales e implementación del parser PDF.</td><td>Presencial</td></tr>
-    <tr><td>26/08/2026</td><td>Roberto García</td><td><strong>Pruebas con el cliente (E05).</strong> Validación del MVP con base de datos: alertas de sobrecarga, desvío y tracking en tiempo real.</td><td>Presencial</td></tr>
+    <tr><td>26/08/2026</td><td>Roberto García</td><td><strong>Pruebas con el cliente (E05).</strong> Validación del MVP con base de datos: alertas de sobrecarga y primera revisión de las alertas de desvío y del tracking en tiempo real (estos dos quedaron operativos recién el 22/09/2026, ver 5.6).</td><td>Presencial</td></tr>
+    <tr><td>06/09/2026</td><td>Roberto García</td><td><strong>Tercera entrevista.</strong> Devoluciones del cliente sobre el MVP con base de datos: zonas, tracking, paradas, repartidores y código de seguridad al cliente (minuta 02).</td><td>Presencial</td></tr>
   </table>
   <div class="callout todo"><b>Pendiente:</b> la tercera presentación (25/09/2026, E05) todavía no se realizó — sumarla acá con su fecha real una vez concretada.</div>
 
@@ -1119,16 +1168,16 @@ CREATE TABLE alertas_sistema (
   </table>
   <h4>Minuta 02 · Tercera entrevista — Devoluciones del cliente sobre el MVP con BD</h4>
   <table>
-    <tr><td><strong>Fecha y duración</strong></td><td>09/06/2026. Duración: ~60 minutos.</td></tr>
+    <tr><td><strong>Fecha y duración</strong></td><td>06/09/2026. Duración: ~60 minutos.</td></tr>
     <tr><td><strong>Participantes</strong></td><td>Roberto García (cliente, dueño de Tres Reyes), Varela (PM / UX-UI) por el equipo.</td></tr>
-    <tr><td><strong>Objetivo</strong></td><td>Ajustes finales previos a la carga de boletas reales e implementación del parser PDF. Revisión del estado del MVP con base de datos.</td></tr>
+    <tr><td><strong>Objetivo</strong></td><td>Revisar con Roberto el estado del MVP con base de datos y relevar sus devoluciones antes de la tercera presentación.</td></tr>
     <tr><td><strong>Temas tratados</strong></td><td>
       <ul style="margin:4px 0;padding-left:18px;">
         <li>Prueba del panel de Viajes pendientes con selección de múltiples zonas.</li>
         <li>Revisión del mapa de Tracking en tiempo real.</li>
         <li>Funcionalidad de agregar parada a un viaje en curso.</li>
         <li>Estado de disponibilidad de los repartidores.</li>
-        <li>Revisión del sistema de correo de seguridad (recuperación de contraseña).</li>
+        <li>Revisión del correo con código de seguridad que se enviaba al cliente que recibe la entrega.</li>
       </ul>
     </td></tr>
     <tr><td><strong>Decisiones y acuerdos</strong></td><td>
@@ -1138,7 +1187,7 @@ CREATE TABLE alertas_sistema (
         <li><strong>Botón "Agregar parada":</strong> el admin debe poder agregar una parada (boleta no asignada) a un viaje ya confirmado o en curso, desencadenando la reoptimización de la ruta.</li>
         <li><strong>Paradas del mismo cliente no cuentan doble:</strong> si un mismo cliente tiene dos boletas con la misma dirección de entrega exacta, deben agruparse como una sola parada en la ruta (un solo waypoint en Google Maps) para no romper el cálculo de ruta.</li>
         <li><strong>Repartidores en viaje:</strong> el apartado "Repartidores" en Configuración debe marcar como "No disponible / En viaje" a quien tenga un viaje confirmado o en curso, en vez de mostrar siempre "Disponible".</li>
-        <li><strong>Sin correo de seguridad:</strong> Roberto solicitó que el sistema <em>no</em> envíe el correo de código de seguridad / recuperación de contraseña al cliente. No lo considera necesario para su operación.</li>
+        <li><strong>Sin correo de seguridad:</strong> Roberto solicitó que el sistema <em>no</em> envíe el correo con código de seguridad al cliente que recibe la entrega. No lo considera necesario para su operación.</li>
       </ul>
     </td></tr>
     <tr><td><strong>Próximos pasos y responsables</strong></td><td>Traverso y Crupi implementan los 5 cambios de funcionalidad; Varela actualiza el Control de Cambios (sección 1) y evalúa impacto en el GANTT (6.1). Todos los cambios fueron implementados en los sprints posteriores a esta reunión.</td></tr>
@@ -1153,13 +1202,15 @@ CREATE TABLE alertas_sistema (
     <tr><td><strong>Comunicación de estado</strong></td><td>Los estados del viaje se muestran en lenguaje simple (armado, confirmado, iniciado, finalizado) en vez de códigos internos.</td><td>Facundo y Tomás tienen niveles tecnológicos distintos (4/5 y 3/5); Tomás necesita un flujo autoevidente (RNF05).</td></tr>
     <tr><td><strong>Tipografía / accesibilidad</strong></td><td>Se aumentó el tamaño de fuente a un mínimo de 18px en las pantallas principales del panel.</td><td>Roberto declara dificultad visual (RNF02).</td></tr>
     <tr><td><strong>Roles y permisos</strong></td><td>Se restringió la edición de rutas y configuración al perfil administrador; el repartidor solo ve y marca su propia hoja de ruta.</td><td>Pedido explícito en la entrevista: separar el acceso total del acceso operativo (RF06, RNF04).</td></tr>
-    <tr><td><strong>Inicio de viaje</strong></td><td>El botón "Iniciar viaje" pasó de abrir solo la vista de mapa interna (Leaflet) a geolocalizar al repartidor y redirigirlo directamente a la app de Google Maps, con el destino y las paradas intermedias ya cargadas en el orden óptimo.</td><td>El repartidor necesitaba una navegación GPS real (giro a giro, tráfico en vivo), algo que un mapa embebido no ofrece; Google Maps ya está instalado en todos los celulares del equipo de reparto.</td></tr>
+    <tr><td><strong>Inicio de viaje</strong></td><td>El botón "Iniciar viaje" pasó de abrir solo la vista de mapa interna (en ese momento con Leaflet; hoy el mapa del repartidor también usa Google Maps) a geolocalizar al repartidor y redirigirlo directamente a la app de Google Maps, con el destino y las paradas intermedias ya cargadas en el orden óptimo.</td><td>El repartidor necesitaba una navegación GPS real (giro a giro, tráfico en vivo), algo que un mapa embebido no ofrece; Google Maps ya está instalado en todos los celulares del equipo de reparto.</td></tr>
     <tr><td><strong>Unificación de zonas</strong></td><td>Al confirmar 2 o más zonas con el mismo camión, el sistema las fusiona en un único viaje con una sola ruta optimizada (Google Routes API), visible como una sola fila tanto en "Viajes del día" como en el "Histórico".</td><td>Pedido explícito de Roberto en la tercera entrevista (minuta 02): al asignar zonas vecinas al mismo camión, quería verlas como un solo recorrido, no como dos separados.</td></tr>
-    <tr><td><strong>Tracking — paradas visibles en mapa</strong></td><td>El mapa de Tracking muestra ahora los marcadores numerados de cada parada pendiente (en el orden real de la ruta); al marcar una entrega, el marcador desaparece del mapa. Si el viaje tiene un punto de finalización configurado, se muestra también.</td><td>La pantalla de Tracking no informaba hacia dónde iba el camión; Roberto quería ver en el mapa tanto la posición del vehículo como las paradas que faltaban.</td></tr>
+    <tr><td><strong>Tracking — paradas visibles en mapa</strong></td><td>El mapa de Tracking muestra ahora los marcadores numerados de cada parada pendiente (en el orden real de la ruta); al marcar una entrega, el marcador desaparece del mapa. Si el viaje tiene un punto de finalización configurado, se muestra también. Se agregó un pin fijo de la fábrica y, con varios repartidores en simultáneo, cada viaje usa un color propio (camión, paradas y destino) con íconos diseñados para el sistema.</td><td>La pantalla de Tracking no informaba hacia dónde iba el camión; Roberto quería ver en el mapa tanto la posición del vehículo como las paradas que faltaban.</td></tr>
     <tr><td><strong>Agregar parada a viaje en curso</strong></td><td>Se agregó un selector en "Viajes del día" para sumar una boleta sin asignar a un viaje ya confirmado o en curso. La ruta se reoptimiza automáticamente respetando las entregas ya hechas.</td><td>Pedido explícito de Roberto: si se olvidó de cargar una boleta a tiempo, necesitaba poder agregarla al viaje sin cancelarlo y volver a empezar.</td></tr>
     <tr><td><strong>Panel mobile del admin</strong></td><td>Se añadió un menú hamburguesa (☰) con overlay para navegar todas las pantallas del panel desde el celular. Antes el menú lateral se ocultaba en pantallas pequeñas sin reemplazo, dejando al admin sin navegación desde el teléfono.</td><td>Roberto y el equipo revisan el estado de los viajes desde el celular en tiempo real; necesitaban acceder a Tracking, Alertas y Viajes del día sin depender de una computadora.</td></tr>
     <tr><td><strong>Boletas pospuestas</strong></td><td>Se creó una sección "📋 Boletas pospuestas" en el menú. Al sacar una boleta de un viaje armado (antes de confirmar), pasa a esta sección en lugar de reagruparse sola. Desde ahí se puede agregar a cualquier viaje o devolverla al flujo normal.</td><td>Antes, sacar una boleta de un viaje la devolvía al mismo viaje automáticamente. El admin necesitaba poder "apartar" una entrega para un día específico sin perderla.</td></tr>
     <tr><td><strong>Puntos de finalización configurables</strong></td><td>Nueva pestaña "📍 Destinos" en Configuración. El admin carga destinos con nombre y dirección (se geocodifican automáticamente al guardar). Al confirmar un viaje, puede elegir a cuál de estos puntos debe llegar el camión al final; sin elección, termina en la última entrega.</td><td>Los camiones no siempre vuelven al mismo depósito; Roberto necesitaba poder configurar distintos puntos de llegada según el día o el viaje.</td></tr>
+    <tr><td><strong>Paradas del mismo cliente</strong></td><td>Dos o más boletas del mismo cliente con la misma dirección exacta se agrupan como una sola parada en la ruta y un solo waypoint en Google Maps.</td><td>Pedido de Roberto en la minuta 02: la misma dirección repetida contaba como dos paradas y rompía el cálculo de la ruta.</td></tr>
+    <tr><td><strong>Código de seguridad al cliente</strong></td><td>Se dejó de enviar el correo con código de seguridad al cliente que recibe la entrega.</td><td>Pedido de Roberto en la minuta 02: no lo considera necesario para su operación.</td></tr>
   </table>
   <div class="callout"><b>Trazabilidad de la iteración</b><br>Cada fila de esta tabla nace de una minuta (10.2) y, cuando implica un cambio de requerimiento o de alcance, se replica como fila nueva en el Control de Cambios (sección 1). Así el panel validado queda unido a la especificación por una cadena de evidencia completa.</div>
 
@@ -1170,8 +1221,8 @@ CREATE TABLE alertas_sistema (
     <tr><td>E01</td><td>Entrevistas a Roberto García (20/4 y 27/4), análisis de resultados y presentación de proyecto. Problema y línea de base definidos (sección 2).</td><td>04/05/2026</td></tr>
     <tr><td>E02</td><td>Primer mock-up, validación con el cliente, parser de boletas en PDF, despliegue inicial en InfinityFree, segunda presentación.</td><td>06/07/2026</td></tr>
     <tr><td>E03</td><td>Diseño y creación de la base de datos MySQL, tablas del sistema, login con roles (bcrypt), conexión BD-front-back.</td><td>31/07/2026</td></tr>
-    <tr><td>E04</td><td>Geocodificación y ruteo (Nominatim/OSRM → migración a Google APIs — Geocoding API + Routes API), agrupación por zona, Nearest Neighbor + Haversine; inicio de viaje geolocalizado con handoff a Google Maps para navegación real; unificación de zonas con el mismo camión; boletas pospuestas; puntos de finalización configurables; agregar parada a viaje activo.</td><td><strong style="color:var(--green)">100%</strong></td></tr>
-    <tr><td>E05</td><td>Alertas de sobrecarga (RF06) y desvío (RF08) implementadas; tracking en tiempo real (RF09) con paradas numeradas en el mapa; panel mobile del admin (hamburguesa); marcadores de repartidor "En viaje / Disponible"; RF10 (reporte de eficiencia) pendiente. Tercera presentación a confirmar fecha.</td><td><strong style="color:var(--amber)">85%</strong></td></tr>
+    <tr><td>E04</td><td>Geocodificación y ruteo (Nominatim/OSRM → LocationIQ → migración a Google APIs: Geocoding API + Routes API), agrupación por zona, orden de paradas con Nearest Neighbor + Haversine reemplazado por Google Routes API; inicio de viaje geolocalizado con handoff a Google Maps para navegación real; unificación de zonas con el mismo camión; boletas pospuestas; puntos de finalización configurables; agregar parada a viaje activo.</td><td><strong style="color:var(--green)">100%</strong></td></tr>
+    <tr><td>E05</td><td>Alertas de sobrecarga (RF06) y desvío (RF08) implementadas; tracking en tiempo real (RF09) con paradas numeradas, pin de fábrica y colores por viaje; tablas de tracking creadas con <code class="inline">migracion_tracking.sql</code> (22/09/2026); panel mobile del admin (hamburguesa); marcadores de repartidor "En viaje / Disponible"; RF10 parcial (falta comparación real vs. estimado). Tercera presentación: 25/09/2026.</td><td><strong style="color:var(--amber)">85%</strong></td></tr>
     <tr><td>E06</td><td>Análisis UX/UI y de accesibilidad, verificación de cumplimiento de RF/RNF, ajustes finales.</td><td>No iniciada</td></tr>
   </table>
   <div class="callout todo"><b>Criterio de cierre</b><br>Un hito se da por cerrado cuando su entregable está verificado, no cuando se termina de trabajar en él. Los desvíos respecto del GANTT (6.1) se anotan en la fila correspondiente y se revisan en la reunión siguiente, con su minuta (10.2).</div>
