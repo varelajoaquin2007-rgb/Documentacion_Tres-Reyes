@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Documentación del Proyecto: TruckRoute · Tres Reyes — Aceitunas y Encurtidos</title>
-<meta name="description" content="Carpeta del Proyecto de TruckRoute: sistema de ruteo logístico para Tres Reyes — Aceitunas y Encurtidos. Diagnóstico, requisitos, arquitectura, modelo de datos, gestión, oferta económica y seguimiento.">
+<title>Documentación del Proyecto: Turbologistica · Tres Reyes — Aceitunas y Encurtidos</title>
+<meta name="description" content="Carpeta del Proyecto de Turbologistica: sistema de ruteo logístico para Tres Reyes — Aceitunas y Encurtidos. Diagnóstico, requisitos, arquitectura, modelo de datos, gestión, oferta económica y seguimiento.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -156,24 +156,24 @@
 .sidebar{top:78px;height:calc(100vh - 78px)}
 .project-header{position:sticky;top:0;z-index:100;background:rgba(7,11,10,.96);backdrop-filter:blur(16px);border-bottom:1px solid rgba(197,155,39,.25);color:#e7f2ec;font-family:Inter,Arial,sans-serif}
 .project-shell{max-width:1380px;margin:auto;padding:12px 24px;min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px}
-.project-identity{display:flex;align-items:center;gap:14px;flex-shrink:0}.project-identity a{display:block}.project-identity img{display:block;object-fit:contain;width:auto}.project-product{height:49px;max-width:210px}.project-client{height:31px;max-width:145px}.project-for{display:grid;gap:5px;border-left:1px solid #675522;padding-left:14px}.project-for span{font:600 10px/1.2 Inter,Arial,sans-serif;color:#a9b9b0}
+.project-identity{display:flex;align-items:center;gap:14px;flex-shrink:0}.project-identity a{display:block}.project-identity img{display:block;object-fit:contain;width:auto}.project-product{height:auto;width:210px;max-width:100%}.project-client{height:31px;max-width:145px}.project-for{display:grid;gap:5px;border-left:1px solid #675522;padding-left:14px}.project-for span{font:600 10px/1.2 Inter,Arial,sans-serif;color:#a9b9b0}
 .project-nav{display:flex;align-items:center;gap:4px}.project-header a,.project-footer-links a{text-decoration:none}.project-nav a,.project-mobile a{font:600 13px/1.4 Inter,Arial,sans-serif;color:#b9c6bf;padding:10px;border-radius:8px}.project-nav a:hover,.project-mobile a:hover,.project-nav a[aria-current],.project-mobile a[aria-current]{color:#e5c158;background:rgba(197,155,39,.12)}.project-system{font:700 12px/1.4 Inter,Arial,sans-serif;padding:11px 14px;border:1px solid #776027;border-radius:9px;color:#e5c158;white-space:nowrap}.project-header a:focus-visible,.project-header summary:focus-visible,.project-footer-links a:focus-visible{outline:2px solid #e5c158;outline-offset:3px}
 .project-mobile{display:none;position:static;overflow:visible;background:transparent;border:0;margin:0;border-radius:0}.project-mobile summary{list-style:none;cursor:pointer;padding:10px 12px;border:1px solid #675522;border-radius:8px;font:600 14px/1.4 Inter,Arial,sans-serif;color:#e5c158}.project-mobile summary::-webkit-details-marker{display:none}.project-mobile summary::after{content:none}.project-mobile[open] summary{background:#17241c}.project-mobile nav{position:absolute;top:100%;left:0;right:0;background:#0d1411;border-bottom:1px solid #675522;padding:12px 16px;display:grid;gap:4px;box-shadow:0 16px 30px #0006}.project-mobile a{display:block}
 .project-local{max-width:1380px;margin:auto;padding:0 24px 10px;display:flex;gap:16px;flex-wrap:wrap}.project-local a{font:600 12px/1.5 Inter,Arial,sans-serif;color:#b9c6bf}.project-local a:hover{color:#e5c158}
 .project-footer-brand{display:flex;justify-content:center;align-items:center;gap:20px;flex-wrap:wrap;margin:0 auto 20px;padding:0 24px}.project-footer-brand img{height:34px;width:auto;max-width:200px;object-fit:contain}.project-footer-links{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 20px;margin:18px 24px 0}.project-footer-links a{font:600 13px/1.5 Inter,Arial,sans-serif;color:#b9c6bf}.project-footer-links a:hover{color:#e5c158}
 html{scroll-padding-top:135px}
-@media(max-width:1100px){.project-nav,.project-shell>.project-system{display:none}.project-mobile{display:block}.project-shell{padding:10px 16px;min-height:72px}.project-product{height:42px;max-width:180px}.project-client{height:30px;max-width:120px}.project-local{padding-left:16px;padding-right:16px}}
-@media(max-width:520px){.project-shell{gap:10px}.project-identity{gap:10px}.project-product{height:36px;max-width:135px}.project-client{height:25px;max-width:95px}.project-for{padding-left:10px}.project-mobile summary{padding:9px}.project-local{gap:8px 14px}}
+@media(max-width:1100px){.project-nav,.project-shell>.project-system{display:none}.project-mobile{display:block}.project-shell{padding:10px 16px;min-height:72px}.project-product{height:auto;width:180px;max-width:100%}.project-client{height:30px;max-width:120px}.project-local{padding-left:16px;padding-right:16px}}
+@media(max-width:520px){.project-shell{gap:10px}.project-identity{gap:10px}.project-product{height:auto;width:135px;max-width:100%}.project-client{height:25px;max-width:95px}.project-for{padding-left:10px}.project-mobile summary{padding:9px}.project-local{gap:8px 14px}}
 </style>
 </head>
 <body>
 
-<div class="project-header" role="banner"><div class="project-shell"><div class="project-identity"><a href="https://varelajoaquin2007-rgb.github.io/Landing-Page-Tres-Reyes/" aria-label="TruckRoute — inicio"><img class="project-product" src="assets/truckroute-logo.png" alt="TruckRoute — Intelligent Fleet Solutions"></a><div class="project-for"><span>Desarrollado para</span><img class="project-client" src="assets/tres-reyes-logo.webp" alt="Tres Reyes — Aceitunas y Encurtidos"></div></div><nav class="project-nav" aria-label="Navegación principal"><a href="https://varelajoaquin2007-rgb.github.io/Landing-Page-Tres-Reyes/">Inicio</a><a href="https://varelajoaquin2007-rgb.github.io/Documentacion_Tres-Reyes/" aria-current="page">Documentación</a><a href="https://varelajoaquin2007-rgb.github.io/QuickStartGuide_TresReyes/">Guía rápida</a><a href="https://varelajoaquin2007-rgb.github.io/FAQs_Tresreyes/">Preguntas frecuentes</a></nav><a class="project-system" href="https://tres-reyes-logistica.page.gd" target="_blank" rel="noopener">Ir al sistema ↗</a><details class="project-mobile"><summary>Menú</summary><nav aria-label="Navegación móvil"><a href="https://varelajoaquin2007-rgb.github.io/Landing-Page-Tres-Reyes/">Inicio</a><a href="https://varelajoaquin2007-rgb.github.io/Documentacion_Tres-Reyes/" aria-current="page">Documentación</a><a href="https://varelajoaquin2007-rgb.github.io/QuickStartGuide_TresReyes/">Guía rápida</a><a href="https://varelajoaquin2007-rgb.github.io/FAQs_Tresreyes/">Preguntas frecuentes</a><a class="project-system" href="https://tres-reyes-logistica.page.gd" target="_blank" rel="noopener">Ir al sistema ↗</a></nav></details></div></div>
+<div class="project-header" role="banner"><div class="project-shell"><div class="project-identity"><a href="https://varelajoaquin2007-rgb.github.io/Landing-Page-Tres-Reyes/" aria-label="Turbologistica — inicio"><img class="project-product" src="assets/turbologistica-logo-dark.png" alt="Turbologistica — Intelligent Fleet Solutions"></a><div class="project-for"><span>Desarrollado para</span><img class="project-client" src="assets/tres-reyes-logo.webp" alt="Tres Reyes — Aceitunas y Encurtidos"></div></div><nav class="project-nav" aria-label="Navegación principal"><a href="https://varelajoaquin2007-rgb.github.io/Landing-Page-Tres-Reyes/">Inicio</a><a href="https://varelajoaquin2007-rgb.github.io/Documentacion_Tres-Reyes/" aria-current="page">Documentación</a><a href="https://varelajoaquin2007-rgb.github.io/QuickStartGuide_TresReyes/">Guía rápida</a><a href="https://varelajoaquin2007-rgb.github.io/FAQs_Tresreyes/">Preguntas frecuentes</a></nav><a class="project-system" href="https://tres-reyes-logistica.page.gd" target="_blank" rel="noopener">Ir al sistema ↗</a><details class="project-mobile"><summary>Menú</summary><nav aria-label="Navegación móvil"><a href="https://varelajoaquin2007-rgb.github.io/Landing-Page-Tres-Reyes/">Inicio</a><a href="https://varelajoaquin2007-rgb.github.io/Documentacion_Tres-Reyes/" aria-current="page">Documentación</a><a href="https://varelajoaquin2007-rgb.github.io/QuickStartGuide_TresReyes/">Guía rápida</a><a href="https://varelajoaquin2007-rgb.github.io/FAQs_Tresreyes/">Preguntas frecuentes</a><a class="project-system" href="https://tres-reyes-logistica.page.gd" target="_blank" rel="noopener">Ir al sistema ↗</a></nav></details></div></div>
 
 
 <div class="layout">
   <aside class="sidebar">
-    <div class="sidebar-brand"><strong>TruckRoute</strong><span>Tres Reyes — Documentación</span></div>
+    <div class="sidebar-brand"><strong>Turbologistica</strong><span>Tres Reyes — Documentación</span></div>
 
     <div class="nav-btns">
       <a class="nav-btn" href="https://varelajoaquin2007-rgb.github.io/QuickStartGuide_TresReyes/" target="_blank" rel="noopener">🚀 Guía de Inicio Rápido</a>
@@ -240,7 +240,7 @@ html{scroll-padding-top:135px}
 <header class="hero">
   <div class="wrap">
     <p class="eyebrow">Carpeta del Proyecto · Documentación</p>
-    <h1>TruckRoute — Sistema de ruteo logístico para Tres Reyes</h1>
+    <h1>Turbologistica — Sistema de ruteo logístico para Tres Reyes</h1>
     <p class="sub">Documentación técnica, operativa y económica del proyecto. Sistema de software (backend + dashboard web) para calcular rutas óptimas, controlar la carga por camión y hacer seguimiento de los repartos de Tres Reyes — Aceitunas y Encurtidos, San Miguel, Buenos Aires.</p>
     <p class="lede"><strong style="color:#fff">Cliente:</strong> Roberto García · Tres Reyes — Aceitunas y Encurtidos, San Miguel &nbsp;·&nbsp; <strong style="color:#fff">Materia:</strong> Evaluación de Proyectos &nbsp;·&nbsp; <strong style="color:#fff">Docente:</strong> Prof. Pedaci, Lourdes &nbsp;·&nbsp; <strong style="color:#fff">Ciclo:</strong> 7mo Informática 2026 · Instituto Leonardo Murialdo</p>
   </div>
@@ -259,6 +259,7 @@ html{scroll-padding-top:135px}
     <tr><td>0.4</td><td>06/09/2026</td><td>PM (Varela)</td><td>Cambios de alcance acordados con Roberto en la tercera entrevista (minuta 02, 10.2): unificación de zonas con el mismo camión, paradas visibles en el mapa de Tracking, botón "Agregar parada" a viaje activo, agrupación de boletas del mismo cliente y dirección en una sola parada, estado "En viaje" de los repartidores y baja del correo con código de seguridad al cliente que recibe la entrega.</td></tr>
     <tr><td>0.5</td><td>09/2026</td><td>D01 (Traverso) · D02 (Crupi)</td><td>El orden de paradas pasa a calcularlo Google Routes API (<code class="inline">optimizeWaypointOrder</code>), en reemplazo de Nearest Neighbor + Haversine (ISW04b). Google Maps JavaScript API reemplaza a Leaflet en los tres mapas del sistema (Viajes pendientes, Tracking y mapa del repartidor). Se suman puntos de finalización configurables, boletas pospuestas y el panel mobile del admin (10.3).</td></tr>
     <tr><td>0.6</td><td>22/09/2026</td><td>Equipo</td><td>Creación de las tablas <code class="inline">posiciones</code> y <code class="inline">alertas_sistema</code> con <code class="inline">migracion_tracking.sql</code>: el código de tracking y alertas ya existía, pero las tablas nunca se habían creado y los errores se descartaban en silencio. Desde esta fecha RF08 y RF09 funcionan en producción. Mapa de Tracking con pin fijo de fábrica, colores por viaje para varios repartidores simultáneos e íconos propios (5.6, 10.3).</td></tr>
+      <tr><td>0.7</td><td>28/10/2026</td><td>Equipo</td><td>El producto pasa a llamarse Turbologistica (antes Turbologistica). Seguimiento GPS en segundo plano con la app Traccar Client (<code class="inline">tracking.php?action=traccar</code>, con clave secreta; solo se guarda la posición con el viaje en curso) y ruta real dibujada desde la posición actual del camión. Lectura del número de boleta en los dos formatos de PDF (N 0006-00002396 y N° de cobro). Programación de viajes para otros días con disponibilidad de camiones por día (un viaje por camión por día; mantenimiento nunca disponible). Confirmación de varias zonas con fecha y destino, igual que con una zona. Las boletas no entregadas pasan a pospuestas al finalizar el viaje; botón Posponer por boleta y "Pasar todas a pendientes". Entregas bloqueadas hasta iniciar el viaje y Google Maps solo con las paradas pendientes. Paradas contadas por dirección real e histórico ordenado por fecha.</td></tr>
   </table>
 </section>
 
@@ -333,7 +334,7 @@ html{scroll-padding-top:135px}
 
   <h3 id="s3-1">3.1. Propósito</h3>
   <p>El propósito del proyecto es reemplazar el método manual de planificación de repartos de Tres Reyes, que hoy se resuelve con Google Maps y coordinación por WhatsApp, por un sistema que calcule automáticamente la ruta óptima de cada camión, controle la carga por salida y le dé a Roberto García visibilidad real de la operación logística diaria.</p>
-  <p>TruckRoute busca resolver tres problemas medibles detectados en la entrevista (ver también el árbol de problemas, sección 2): el <strong>tiempo perdido</strong> armando rutas a mano, el <strong>combustible desperdiciado</strong> por rutas no optimizadas y las dobles pasadas por el mismo punto, y la <strong>falta de control de carga</strong> (kg) por camión y salida.</p>
+  <p>Turbologistica busca resolver tres problemas medibles detectados en la entrevista (ver también el árbol de problemas, sección 2): el <strong>tiempo perdido</strong> armando rutas a mano, el <strong>combustible desperdiciado</strong> por rutas no optimizadas y las dobles pasadas por el mismo punto, y la <strong>falta de control de carga</strong> (kg) por camión y salida.</p>
 
   <h3 id="s3-2">3.2. Alcance</h3>
   <p>El sistema <strong>incluye</strong>: importación y parseo automático de boletas en PDF, geocodificación de direcciones, agrupación de entregas por zona, cálculo de ruta óptima (Google Routes API con optimización del orden de paradas), generación de hoja de ruta digital, gestión del ciclo de vida del viaje (armar → confirmar → iniciar → finalizar), navegación GPS giro a giro para el repartidor, control de carga por camión, un panel de alertas y autenticación con roles diferenciados.</p>
@@ -383,11 +384,11 @@ html{scroll-padding-top:135px}
     <li>Pedaci, L. (2026). <em>Evaluación de Proyectos - Módulo 02: Fases de un Proyecto</em>. Instituto Leonardo Murialdo.</li>
     <li>Pedaci, L. (2026). <em>Evaluación de Proyectos - Módulo de Documentación</em>. Instituto Leonardo Murialdo.</li>
     <li>Universidad Tecnológica Nacional. (2012). <em>Buenas Prácticas para Proyectos Informáticos</em>. edUTecNe. ISBN 978-987-1896-01-1.</li>
-    <li>Equipo N° 5. (2026). <em>TruckRoute — MVP</em> [Aplicación web]. <a href="https://tres-reyes-logistica.page.gd/" target="_blank">tres-reyes-logistica.page.gd</a></li>
+    <li>Equipo N° 5. (2026). <em>Turbologistica — MVP</em> [Aplicación web]. <a href="https://tres-reyes-logistica.page.gd/" target="_blank">tres-reyes-logistica.page.gd</a></li>
   </ul>
 
   <h3 id="s3-6">3.6. Resumen Ejecutivo</h3>
-  <p>TruckRoute es un sistema de software pensado para Tres Reyes — Aceitunas y Encurtidos (San Miguel, Buenos Aires): una empresa de distribución con más de 20 años en el rubro, 7 empleados y flota propia. El sistema reemplaza el método actual (Google Maps + WhatsApp) por un flujo digital: se cargan las boletas del día en PDF, el sistema geocodifica los destinos, agrupa por zona y calcula la ruta óptima para cada camión, respetando su capacidad de carga. El repartidor recibe la hoja de ruta y navega con GPS giro a giro; el administrador ve el estado de todos los viajes y recibe alertas de cierre.</p>
+  <p>Turbologistica es un sistema de software pensado para Tres Reyes — Aceitunas y Encurtidos (San Miguel, Buenos Aires): una empresa de distribución con más de 20 años en el rubro, 7 empleados y flota propia. El sistema reemplaza el método actual (Google Maps + WhatsApp) por un flujo digital: se cargan las boletas del día en PDF, el sistema geocodifica los destinos, agrupa por zona y calcula la ruta óptima para cada camión, respetando su capacidad de carga. El repartidor recibe la hoja de ruta y navega con GPS giro a giro; el administrador ve el estado de todos los viajes y recibe alertas de cierre.</p>
   <p><strong>Resultados esperados:</strong> eliminar las dobles pasadas por el mismo punto, reducir la distancia total recorrida en al menos un 15%, bajar el armado de rutas de un proceso manual a menos de 2 minutos automáticos, y que los repartidores dejen de depender de WhatsApp para coordinar su jornada.</p>
 </section>
 
@@ -395,7 +396,7 @@ html{scroll-padding-top:135px}
   <h2><span class="num">4</span>Descripción General</h2>
 
   <h3 id="s4-1">4.1. Perspectiva del producto</h3>
-  <p>TruckRoute es un <strong>sistema nuevo</strong>: hoy Tres Reyes no tiene ningún sistema digital de ruteo, todo se resuelve con Google Maps y WhatsApp. No reemplaza un software existente ni es parte de un sistema mayor, aunque sí se apoya en infraestructura ya disponible: las PCs y celulares del equipo de Tres Reyes (Roberto usa iPhone, Tomás un dispositivo Android simple) y en las APIs de Google Cloud (Geocoding, Routes y Maps JavaScript).</p>
+  <p>Turbologistica es un <strong>sistema nuevo</strong>: hoy Tres Reyes no tiene ningún sistema digital de ruteo, todo se resuelve con Google Maps y WhatsApp. No reemplaza un software existente ni es parte de un sistema mayor, aunque sí se apoya en infraestructura ya disponible: las PCs y celulares del equipo de Tres Reyes (Roberto usa iPhone, Tomás un dispositivo Android simple) y en las APIs de Google Cloud (Geocoding, Routes y Maps JavaScript).</p>
   <div class="flow">
     <div class="box">Boletas PDF</div><span class="arrow">→</span>
     <div class="box">Geocodificación (Google Geocoding API)</div><span class="arrow">→</span>
@@ -493,7 +494,7 @@ html{scroll-padding-top:135px}
     <ul>
       <li><strong>RF06, alerta de sobrecarga:</strong> el panel bloquea la confirmación y muestra el porcentaje de carga vs. capacidad del camión.</li>
       <li><strong>RF08, alerta de desvío de ruta:</strong> la pantalla de "Alertas" muestra los metros de desvío, el camión y el repartidor en tiempo real.</li>
-      <li><strong>RF09, tracking en tiempo real:</strong> mapa con pin fijo de la fábrica, posición GPS en vivo de cada camión, paradas numeradas en el orden óptimo de la ruta y marcador del punto de finalización (si se eligió uno). Los marcadores desaparecen a medida que se marcan entregas. Con varios repartidores en simultáneo, cada viaje usa un color propio en todos sus marcadores.</li>
+      <li><strong>RF09, tracking en tiempo real:</strong> mapa con pin fijo de la fábrica, posición GPS en vivo de cada camión (por la web o en segundo plano con Traccar Client), ruta real desde su posición actual, paradas numeradas en el orden óptimo de la ruta y marcador del punto de finalización (si se eligió uno). Los marcadores desaparecen a medida que se marcan entregas. Con varios repartidores en simultáneo, cada viaje usa un color propio en todos sus marcadores.</li>
       <li><strong>RF10 (parcial):</strong> la pantalla de Reportes muestra km estimados, consumo de combustible estimado (10 L/100 km) y duración de cada viaje.</li>
       <li><strong>Mapas 100% Google:</strong> Viajes pendientes, Tracking y el mapa del repartidor usan Google Maps JavaScript API; el orden de paradas lo calcula Google Routes API.</li>
       <li><strong>Agregar parada a viaje activo:</strong> el admin suma una boleta sin asignar a un viaje confirmado o en curso y la ruta se reoptimiza.</li>
@@ -586,7 +587,7 @@ html{scroll-padding-top:135px}
   <div class="callout info"><b>Nota de trazabilidad:</b> este mockup tenía zonas predefinidas (Centro, Norte, Sur) con radios fijos. En el MVP final, las zonas se asignan automáticamente desde la geocodificación de cada boleta (Geocoding API + CP), y el radio fijo fue reemplazado por la agrupación por nombre de zona extraída directamente de la factura.</div>
 
   <h3 id="s5-3">5.3. Interfaz de hardware</h3>
-  <p><strong>No aplica.</strong> TruckRoute es un proyecto 100% software: no incluye sensores, placas ni dispositivos propios. Se apoya en hardware que Tres Reyes ya posee (PC de escritorio, celulares de Roberto y del repartidor), sin requerir instalación física alguna.</p>
+  <p><strong>No aplica.</strong> Turbologistica es un proyecto 100% software: no incluye sensores, placas ni dispositivos propios. Se apoya en hardware que Tres Reyes ya posee (PC de escritorio, celulares de Roberto y del repartidor), sin requerir instalación física alguna.</p>
 
   <h3 id="s5-4">5.4. Interfaces de software <span class="badge">Buenas Prácticas UTN p.59</span></h3>
   <table>
@@ -750,7 +751,7 @@ CREATE TABLE IF NOT EXISTS alertas_sistema (
   <h3 id="s5-7">5.7. Diagrama de flujo del proceso principal</h3>
   <p>Flujo de extremo a extremo del sistema: desde que Roberto carga las boletas del día hasta que el repartidor finaliza su turno y los datos quedan asentados.</p>
   <div style="overflow-x:auto;margin:16px 0;">
-  <svg viewBox="0 0 820 640" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:820px;font-family:'Inter',sans-serif;font-size:11px;" role="img" aria-label="Diagrama de flujo TruckRoute">
+  <svg viewBox="0 0 820 640" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:820px;font-family:'Inter',sans-serif;font-size:11px;" role="img" aria-label="Diagrama de flujo Turbologistica">
     <defs>
       <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#3ddc84"/></marker>
       <marker id="arrR" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#f2b84b"/></marker>
@@ -876,7 +877,7 @@ CREATE TABLE IF NOT EXISTS alertas_sistema (
       height="520"
       frameborder="0"
       scrolling="yes"
-      title="GANTT TruckRoute — Tres Reyes"
+      title="GANTT Turbologistica — Tres Reyes"
     ></iframe>
   </div>
 
@@ -972,7 +973,7 @@ CREATE TABLE IF NOT EXISTS alertas_sistema (
       height="480"
       frameborder="0"
       scrolling="yes"
-      title="Estimación de costos TruckRoute — Tres Reyes"
+      title="Estimación de costos Turbologistica — Tres Reyes"
     ></iframe>
   </div>
 </section>
@@ -982,7 +983,7 @@ CREATE TABLE IF NOT EXISTS alertas_sistema (
   <p>Documento que explicita el acuerdo entre el equipo desarrollador y el cliente, Roberto García (Tres Reyes — Aceitunas y Encurtidos, San Miguel).</p>
 
   <h4>9.1. Objetivo del proyecto</h4>
-  <p>Desarrollar y mantener TruckRoute, un sistema de ruteo logístico que calcula rutas óptimas, controla la carga por camión y hace seguimiento de los repartos de Tres Reyes, para eliminar el uso manual de Google Maps y WhatsApp.</p>
+  <p>Desarrollar y mantener Turbologistica, un sistema de ruteo logístico que calcula rutas óptimas, controla la carga por camión y hace seguimiento de los repartos de Tres Reyes, para eliminar el uso manual de Google Maps y WhatsApp.</p>
 
   <h4>9.2. Partes involucradas</h4>
   <p>Equipo desarrollador (integrantes y roles según 3.3) y cliente: Roberto García, dueño de Tres Reyes — Aceitunas y Encurtidos, San Miguel, Buenos Aires.</p>
@@ -1038,7 +1039,7 @@ CREATE TABLE IF NOT EXISTS alertas_sistema (
   <table>
     <tr><td><strong>Fecha y duración</strong></td><td>A completar. Duración estimada: 45 minutos.</td></tr>
     <tr><td><strong>Participantes</strong></td><td>Roberto García (cliente, dueño de Tres Reyes), Varela (PM / UX-UI) y Facundo (Frontend) por el equipo.</td></tr>
-    <tr><td><strong>Objetivo</strong></td><td>Validar el panel administrativo de TruckRoute (Boletas, Viajes pendientes, Tracking) con el usuario real antes de sumar las alertas de sobrecarga y desvío.</td></tr>
+    <tr><td><strong>Objetivo</strong></td><td>Validar el panel administrativo de Turbologistica (Boletas, Viajes pendientes, Tracking) con el usuario real antes de sumar las alertas de sobrecarga y desvío.</td></tr>
     <tr><td><strong>Temas tratados</strong></td><td>Recorrido de las pantallas de carga de boletas, armado de viajes y alertas de cierre; lectura de la tabla de Limitaciones del alcance (5.1); prueba del panel en el iPhone de Roberto.</td></tr>
     <tr><td><strong>Decisiones y acuerdos</strong></td><td>Confirmar tipografía mínima de 18px por la dificultad visual de Roberto (RNF02); mantener el lenguaje simple sin jerga técnica; restringir la edición de configuración al perfil administrador.</td></tr>
     <tr><td><strong>Próximos pasos y responsables</strong></td><td>Backend (Traverso / Crupi) implementa RF06 y RF08; el PM abre la fila correspondiente en el Control de Cambios (sección 1) y evalúa el impacto en el GANTT (6.1).</td></tr>
@@ -1105,10 +1106,10 @@ CREATE TABLE IF NOT EXISTS alertas_sistema (
 
 </main>
 
-<footer><div class="project-footer-brand"><img src="assets/truckroute-logo.png" alt="TruckRoute"><img src="assets/tres-reyes-logo.webp" alt="Tres Reyes"></div>
+<footer><div class="project-footer-brand"><img src="assets/turbologistica-logo-dark.png" alt="Turbologistica"><img src="assets/tres-reyes-logo.webp" alt="Tres Reyes"></div>
 
   <div class="wrap">
-    <p><strong>TruckRoute</strong> · Documentación del Proyecto · Caso Roberto García, Tres Reyes — Aceitunas y Encurtidos (San Miguel, Buenos Aires).<br>
+    <p><strong>Turbologistica</strong> · Documentación del Proyecto · Caso Roberto García, Tres Reyes — Aceitunas y Encurtidos (San Miguel, Buenos Aires).<br>
     Evaluación de Proyectos · 7mo Informática 2026 · Instituto Leonardo Murialdo · Prof. Pedaci, Lourdes</p>
   </div>
 <nav class="project-footer-links" aria-label="Enlaces del pie"><a href="https://varelajoaquin2007-rgb.github.io/Landing-Page-Tres-Reyes/">Inicio</a><a href="https://varelajoaquin2007-rgb.github.io/Documentacion_Tres-Reyes/">Documentación</a><a href="https://varelajoaquin2007-rgb.github.io/QuickStartGuide_TresReyes/">Guía rápida</a><a href="https://varelajoaquin2007-rgb.github.io/FAQs_Tresreyes/">Preguntas frecuentes</a></nav></footer>
